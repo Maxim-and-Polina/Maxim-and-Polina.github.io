@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Lato|Poiret+One|Cormorant+Garamond");
+@import url("https://fonts.googleapis.com/css?family=Sofia+Sans+Condensed|Poiret+One|Cormorant+Garamond");
 .has-vertically-aligned-content {
   display: flex;
   flex-direction: column;
@@ -618,7 +618,7 @@ body.preloader-site {
 
 .title-foto {
   font-size: 18pt;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Sofia Sans Condensed', sans-serif;
   font-weight: 700;
   text-align: left;
   color: white;
@@ -626,7 +626,7 @@ body.preloader-site {
 
 
 .subtitle-foto {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Sofia Sans Condensed', sans-serif;
   font-weight: 700;
   font-size: 14pt;
   font-weight: 600;
