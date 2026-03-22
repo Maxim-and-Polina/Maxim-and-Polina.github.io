@@ -1,0 +1,8 @@
+{
+    "id": 123,
+    "folder": "template_name",
+    "offsections": "[]",
+    "grayscales": "{}",
+    "sections": ["section1", "section2"],
+    "questions": []
+}
