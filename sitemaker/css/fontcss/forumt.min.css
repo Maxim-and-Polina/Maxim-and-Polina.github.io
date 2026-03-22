@@ -1,7 +1,7 @@
 @font-face {
     font-family: "SMHeadersFont";
-    src: url(/sitemaker/fonts/Forum.eot);
-    src: url(/sitemaker/fonts/Forum.eot?#iefix)format("embedded-opentype"),url(/sitemaker/fonts/Forum.woff2)format("woff2"),url(/sitemaker/fonts/Forum.woff)format("woff"),url(/sitemaker/fonts/Forum.ttf)format("truetype");
+    src: url(sitemaker/fonts/Forum.eot);
+    src: url(sitemaker/fonts/Forum.eot?#iefix)format("embedded-opentype"),url(sitemaker/fonts/Forum.woff2)format("woff2"),url(sitemaker/fonts/Forum.woff)format("woff"),url(sitemaker/fonts/Forum.ttf)format("truetype");
     font-weight: 400;
     font-style: normal;
     font-display: swap
