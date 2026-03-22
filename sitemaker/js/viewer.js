@@ -17,6 +17,8 @@ var tmonthsr = constr_terms['ln-months-rod'];
 var tmonths_ln = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var template_config = {}
 
+var staticDataMode = true;
+var currentProject = project;
 
 var tmonths_de = [
     "Januar",
@@ -141,50 +143,30 @@ function doGrayscales()
 }
 
 function loadData() {
-    fetch(ajax_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            action: 'loadData',
-            project: project
+    fetch(`sitemaker/data/data_${currentProject}.json`)
+        .then(response => {
+            if (!response.ok) throw new Error('Данные не найдены');
+            return response.json();
         })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Ошибка сети');
-        return response.text();
-    })
-    .then(data => {
-        if (data !== '') {
-            var d = JSON.parse(data);
-            fetch(d['data_file'])
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data !== '') {
-                        data_value = data;
-                        data_value['GROOM'] = d_groom;
-                        data_value['BRIDE'] = d_bride;
-                        data_value['MAIN_DATE'] = d_mdate;
-                        if (demo_view) {
-                            data_value['GROOM_TEL'] = '79268887788';
-                            data_value['BRIDE_TEL'] = '79167778877';
-                            data_value["CONTACTS_LINK"] = {"type": "3", "value": "wedwed_russia"};
-                        }
-                        loadTemplate();
-                    }
-                })
-                .catch(error => console.error('Ошибка загрузки JSON:', error));
-        } else {
-            alert('Ошибка загрузки');
-        }
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Ошибка загрузки');
-    });
+        .then(data => {
+            if (data && data !== '') {
+                data_value = data;
+                data_value['GROOM'] = d_groom;
+                data_value['BRIDE'] = d_bride;
+                data_value['MAIN_DATE'] = d_mdate;
+                if (demo_view) {
+                    data_value['GROOM_TEL'] = '79268887788';
+                    data_value['BRIDE_TEL'] = '79167778877';
+                    data_value["CONTACTS_LINK"] = {"type": "3", "value": "wedwed_russia"};
+                }
+                loadTemplate();
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки данных:', error);
+            alert('Ошибка загрузки данных');
+        });
 }
-
 
 function updateStyleRule(styleTag, selector, newProperties, only=false) {
 
@@ -938,11 +920,18 @@ function loadTemplate(){
         }
     }
 
-    if(typeof fillQuests !== "undefined" && iframe.contents().find('.ct-addquests_wrapper').length === 0)
-    {
-        $.post(ajax_url,{action:'loadQuestionsView',project:project},function(data) {
-            if (data != '') {
-                template_val.questions = $.parseJSON(data);
+    if (typeof fillQuests !== "undefined" && iframe.contents().find('.ct-addquests_wrapper').length === 0) {
+    // Загрузка вопросов из статического JSON файла
+    fetch(`sitemaker/data/questions_${project}.json`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return [];
+        })
+        .then(data => {
+            if (data && data.length > 0) {
+                template_val.questions = data;
                 if (template_val.questions && template_val.questions.length > 0) {
                     var smb = iframe.contents().find('[data-sm-anketa-toggle]');
                     var ins = '';
@@ -965,8 +954,6 @@ function loadTemplate(){
                                 var smbb = $(smb.find('.ct-alcotpl')[0]).clone();
 
                                 smbt.removeAttr('data-sm-text');
-                                // smbt.attr('data-forq',forqu )
-                                // smbc.attr('data-forq',forqu );
                                 smbt.attr('data-forq', forqu)
                                 smbc.attr('data-forq', forqu);
 
@@ -998,7 +985,6 @@ function loadTemplate(){
                                     }
                                 })
 
-
                                 if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
                                     var smbd = $(smbi).clone();
@@ -1019,10 +1005,10 @@ function loadTemplate(){
                 questfilled = true;
             }
         })
+        .catch(error => {
+            console.log('Нет дополнительных вопросов');
+        });
     }
-
-
-
     if(typeof data_value['OWN_IMAGES'] == 'undefined')
     {
         data_value['OWN_IMAGES'] = [];
@@ -1320,54 +1306,30 @@ function parseLinks(text) {
 }
 
 function loadTemplateData() {
-    fetch(ajax_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            action: 'loadTemplateData',
-            project: project
+    fetch(`sitemaker/data/template_${currentProject}.json`)
+        .then(response => {
+            if (!response.ok) throw new Error('Данные шаблона не найдены');
+            return response.json();
         })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Ошибка сети');
-        return response.text();
-    })
-    .then(data => {
-        if (data !== '' && data !== 'false') {
-            var d = JSON.parse(data);
+        .then(d => {
             template_val = d;
-            iframe.prop('src', loader);
+            iframe.prop('src', 'sitemaker/templates/' + template_val.folder + '/index.html');
             $(iframe).on('load', function() {
                 loadData();
-            })
-            if (template_val.offsections && template_val.offsections != '') {
-                offsections = JSON.parse(template_val.offsections);
-            } else {
-                offsections = [];
+            });
+            
+            offsections = template_val.offsections || [];
+            grayscales = template_val.grayscales || [];
+            sections = template_val.sections || [];
+            
+            if (sections.length > 0) {
+                window.allsections = template_val.sections;
             }
-            if (template_val.grayscales && template_val.grayscales != '') {
-                grayscales = JSON.parse(template_val.grayscales);
-            } else {
-                grayscales = [];
-            }
-            if (template_val.sections && template_val.sections != '') {
-                sections = template_val.sections;
-                if (sections.length > 0) {
-                    window.allsections = template_val.sections
-                }
-            } else {
-                sections = [];
-            }
-        } else {
-            alert('Некорректные данные')
-        }
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Некорректные данные');
-    });
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки шаблона:', error);
+            alert('Некорректные данные');
+        });
 }
 
 
