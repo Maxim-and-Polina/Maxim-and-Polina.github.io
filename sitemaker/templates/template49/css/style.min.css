@@ -14,7 +14,7 @@
     --wishes-clr: #FFFFFF;
     --clr-btn: #FFFFFF;
     --bg-btn: #000;
-    --arrow-btn: url(img/arrow-right.webp);
+    --arrow-btn: url(../img/arrow-right.webp);
     --dress-boder: #000;
     --un-clr: #5A7BA8;
     --cal-clr: #333333;
@@ -26,27 +26,27 @@
     --svg-clr: #575757;
     --svg-clr2: #000000;
     --svg-clr3: #DFE6F3;
-    --url-bg: url("img/bg.webp"), #F7F7F7;
+    --url-bg: url("../img/bg.webp"), #F7F7F7;
     --clr-line: #333333;
     --clr-line2: #FFFFFF;
     --bg-line: #fff;
     --bg-line2: #000;
-    --url-arrow: url(img/arrow-left.webp);
-    --modal-arrow: url(img/modal_arrow.webp)
+    --url-arrow: url(../img/arrow-left.webp);
+    --modal-arrow: url(../img/modal_arrow.webp)
 }
 
 .sm-color2 {
     --clr-text-1: #819071;
     --clr-btn: #FFFFFF;
     --bg-btn: #819071;
-    --arrow-btn: url(img/arrow-right.webp);
+    --arrow-btn: url(../img/arrow-right.webp);
     --dress-boder: #819071;
     --cal-clr: #819071;
     --bg-clr: #F0F4ED;
     --bg-clr2: #819071;
     --bg-clr3: rgba(129, 144, 113, 0.4);
     --svg-clr: #819071;
-    --url-bg: url("img/bg.webp"), rgba(240, 244, 237);
+    --url-bg: url("../img/bg.webp"), rgba(240, 244, 237);
     --bg-line2: #819071
 }
 
@@ -63,21 +63,21 @@
     --clr-line: #333333;
     --clr-line2: #FFFFFF;
     --bg-line: #fff;
-    --url-arrow: url(img/arrow-left-b.webp)
+    --url-arrow: url(../img/arrow-left-b.webp)
 }
 
 .sm-color3 {
     --clr-text-1: #7D868D;
     --clr-btn: #FFFFFF;
     --bg-btn: #7D868D;
-    --arrow-btn: url(img/arrow-right.webp);
+    --arrow-btn: url(../img/arrow-right.webp);
     --dress-boder: #7D868D;
     --cal-clr: #7D868D;
     --bg-clr: #F2F2F2;
     --bg-clr2: #7D868D;
     --bg-clr3: rgba(0, 0, 0, 0.3);
     --svg-clr: #7D868D;
-    --url-bg: url("img/bg.webp"), rgba(242, 242, 242);
+    --url-bg: url("../img/bg.webp"), rgba(242, 242, 242);
     --bg-line2: #7D868D
 }
 
@@ -92,23 +92,23 @@
 .sm-color4 {
     --clr-btn: #333333;
     --bg-btn: #E2DED2;
-    --arrow-btn: url(img/arrow-btn-b.webp);
+    --arrow-btn: url(../img/arrow-btn-b.webp);
     --bg-clr: #F6F4EE;
     --bg-clr2: #E2DED2;
     --bg-clr3: rgba(255, 228, 148, 0.3);
     --svg-clr: #000000;
-    --url-bg: url("img/bg.webp"), #F6F4EE
+    --url-bg: url("../img/bg.webp"), #F6F4EE
 }
 
 .sm-color5 {
     --clr-btn: #FFFFFF;
     --bg-btn: #000000;
-    --arrow-btn: url(img/arrow-right.webp);
+    --arrow-btn: url(../img/arrow-right.webp);
     --bg-clr: #F6F6F6;
     --bg-clr2: #E4E4E4;
     --bg-clr3: rgba(0, 0, 0, 0.3);
     --svg-clr: #EDEDED;
-    --url-bg: url("img/bg.webp"), #F6F6F6
+    --url-bg: url("../img/bg.webp"), #F6F6F6
 }
 
 body {
@@ -1789,17 +1789,17 @@ a {
     height: 20px;
     background-repeat: no-repeat;
     margin-left: -50px;
-    mask: url(img/square.svg);
-    -webkit-mask: url(img/square.svg);
+    mask: url(../img/square.svg);
+    -webkit-mask: url(../img/square.svg);
     background: #0e0935;
     background-size: contain;
     cursor: pointer
 }
 
 .sm-form_checkbox_input:checked+.sm-form_checkbox_box {
-    background-image: url(img/square.png);
-    mask: url(img/checked-square.svg);
-    -webkit-mask: url(img/checked-square.svg);
+    background-image: url(../img/square.png);
+    mask: url(../img/checked-square.svg);
+    -webkit-mask: url(../img/checked-square.svg);
     background: #505050
 }
 
