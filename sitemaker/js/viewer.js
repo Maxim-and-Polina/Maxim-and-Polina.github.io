@@ -140,31 +140,49 @@ function doGrayscales()
     })
 }
 
-function loadData(){
-    $.post(ajax_url,{action:'loadData',project:project},function(data){
-        if(data !== '') {
-            var d = $.parseJSON(data);
-            $.getJSON(d['data_file'], function (data) {
-                if (data && data !== '') {
-                    data_value = data;
-                    data_value['GROOM'] = d_groom;
-                    data_value['BRIDE'] = d_bride;
-                    data_value['MAIN_DATE'] = d_mdate;
-                    if(demo_view)
-                    {
-                        data_value['GROOM_TEL'] = '79268887788';
-                        data_value['BRIDE_TEL'] = '79167778877';
-                        data_value["CONTACTS_LINK"] = {"type" : "3","value" : "wedwed_russia"};
+function loadData() {
+    fetch(ajax_url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            action: 'loadData',
+            project: project
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Ошибка сети');
+        return response.text();
+    })
+    .then(data => {
+        if (data !== '') {
+            var d = JSON.parse(data);
+            fetch(d['data_file'])
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data !== '') {
+                        data_value = data;
+                        data_value['GROOM'] = d_groom;
+                        data_value['BRIDE'] = d_bride;
+                        data_value['MAIN_DATE'] = d_mdate;
+                        if (demo_view) {
+                            data_value['GROOM_TEL'] = '79268887788';
+                            data_value['BRIDE_TEL'] = '79167778877';
+                            data_value["CONTACTS_LINK"] = {"type": "3", "value": "wedwed_russia"};
+                        }
+                        loadTemplate();
                     }
-                    loadTemplate();
-                }
-            })
-        }
-        else
-        {
+                })
+                .catch(error => console.error('Ошибка загрузки JSON:', error));
+        } else {
             alert('Ошибка загрузки');
         }
     })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Ошибка загрузки');
+    });
 }
 
 
@@ -1301,29 +1319,37 @@ function parseLinks(text) {
     });
 }
 
-function loadTemplateData(){
-
-    $.post(ajax_url,{action:'loadTemplateData',project:project},function(data){
-        if(data !== '' && data !== 'false') {
-            var d = $.parseJSON(data);
+function loadTemplateData() {
+    fetch(ajax_url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            action: 'loadTemplateData',
+            project: project
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Ошибка сети');
+        return response.text();
+    })
+    .then(data => {
+        if (data !== '' && data !== 'false') {
+            var d = JSON.parse(data);
             template_val = d;
             iframe.prop('src', loader);
-            $(iframe).on('load',function(){
+            $(iframe).on('load', function() {
                 loadData();
             })
-            if(template_val.offsections && template_val.offsections != '') {
-                offsections = $.parseJSON(template_val.offsections);
-            }
-            else
-            {
+            if (template_val.offsections && template_val.offsections != '') {
+                offsections = JSON.parse(template_val.offsections);
+            } else {
                 offsections = [];
             }
-
-            if(template_val.grayscales && template_val.grayscales != '') {
-                grayscales = $.parseJSON(template_val.grayscales);
-            }
-            else
-            {
+            if (template_val.grayscales && template_val.grayscales != '') {
+                grayscales = JSON.parse(template_val.grayscales);
+            } else {
                 grayscales = [];
             }
             if (template_val.sections && template_val.sections != '') {
@@ -1334,12 +1360,14 @@ function loadTemplateData(){
             } else {
                 sections = [];
             }
-        }
-        else
-        {
+        } else {
             alert('Некорректные данные')
         }
     })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Некорректные данные');
+    });
 }
 
 
