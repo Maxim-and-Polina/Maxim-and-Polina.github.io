@@ -574,10 +574,6 @@
                     $.each($('.slick-initialized'), function() {
                         $(this).slick("unslick");
                     })
-                    function initAll() {
-                    $.each($('.slick-initialized'), function() {
-                        $(this).slick("unslick");
-                    })
                     startAll();
                     setTimeout(function() {
                         if ($('.ct-demonstration', window.parent.document).length > 0) {
@@ -590,7 +586,7 @@
                             }
                             var script = document.createElement('script');
                             script.type = 'text/javascript';
-                            script.src = '../../js/js-scroll-animations.min.js';
+                            script.src = '/sitemaker/js/js-scroll-animations.min.js';
                             $("body").append(script);
                             $('html').addClass('animating');
                             $('body').toggleClass('sm-editor_preview', false);
@@ -602,7 +598,8 @@
                             }, 500);
                         } else {
                             $('body').toggleClass('sm-loader', false);
-                    }
+                        }
+                        
                     var sending = false;
                     if ($('[data-sm-anketa-send]').length > 0) {
                         if ($('[data-sm-anketa-name]').length > 1) {
