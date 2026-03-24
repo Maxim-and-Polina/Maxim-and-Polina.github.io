@@ -3,7 +3,7 @@
     "CONTACTS_NAME": "Максим",
     "CONTACTS_TITLE": "Контакты",
     "BRIDE_TEL": "79229306138",
-    "CONTACTS_LINK": {"type": "3", "value": "https://t.me/elder_mdr"},
+    "CONTACTS_LINK": {"type": "3", "value": "elder_mdr"},
     "LOCATION_MAP": "https://yandex.ru/maps/org/terrace/73113895112/?ll=49.677428%2C58.615586&z=15",
     "COVER_PHOTO": "/../test/sitemaker/templates/template49/img/main.jpg",
     "LOCATION_PHOTO": "/../test/sitemaker/templates/template49/img/the_terrace.jpg",
