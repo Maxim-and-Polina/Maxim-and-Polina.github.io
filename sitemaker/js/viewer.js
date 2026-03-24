@@ -1365,64 +1365,6 @@ function initTimingIcons() {
     })
 }
 
-function initBackgroundMusic() {
-    console.log('initBackgroundMusic called');
-    
-    try {
-        var iframeEl = document.querySelector('iframe');
-        if (!iframeEl) {
-            console.log('Iframe not found');
-            return;
-        }
-        
-        var iframeDoc = iframeEl.contentDocument || iframeEl.contentWindow.document;
-        if (!iframeDoc || !iframeDoc.body) {
-            console.log('Iframe body not ready');
-            return;
-        }
-        
-        // Проверяем, есть ли уже музыка
-        if (iframeDoc.getElementById('bg-music')) {
-            console.log('Music already exists');
-            return;
-        }
-        
-        // Создаём аудио элемент
-        var audio = iframeDoc.createElement('audio');
-        audio.id = 'bg-music';
-        audio.loop = true;
-        audio.volume = 0.5;
-        
-        var source = iframeDoc.createElement('source');
-        source.src = 'music/background.mp3';
-        source.type = 'audio/mpeg';
-        audio.appendChild(source);
-        
-        iframeDoc.body.appendChild(audio);
-        console.log('Audio element added');
-        
-        // Пытаемся воспроизвести
-        audio.play().then(function() {
-            console.log('✅ Music playing');
-        }).catch(function() {
-            console.log('Autoplay blocked, adding button');
-            
-            // Добавляем кнопку
-            var btn = iframeDoc.createElement('button');
-            btn.innerHTML = '🎵 Включить музыку';
-            btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px 20px;background:#ff6b6b;color:white;border:none;border-radius:30px;cursor:pointer;';
-            btn.onclick = function() {
-                audio.play();
-                btn.remove();
-            };
-            iframeDoc.body.appendChild(btn);
-        });
-        
-    } catch(e) {
-        console.error('Music error:', e);
-    }
-}
-
 function setIcons() {
     $.each(iframe.contents().find('[data-sm-text^="TIMING_"'), function (k, v) {
 
@@ -1692,5 +1634,63 @@ function initOwnVideo(v) {
             }, 300)
 
         })
+    }
+}
+
+function initBackgroundMusic() {
+    console.log('initBackgroundMusic called');
+    
+    try {
+        var iframeEl = document.querySelector('iframe');
+        if (!iframeEl) {
+            console.log('Iframe not found');
+            return;
+        }
+        
+        var iframeDoc = iframeEl.contentDocument || iframeEl.contentWindow.document;
+        if (!iframeDoc || !iframeDoc.body) {
+            console.log('Iframe body not ready');
+            return;
+        }
+        
+        // Проверяем, есть ли уже музыка
+        if (iframeDoc.getElementById('bg-music')) {
+            console.log('Music already exists');
+            return;
+        }
+        
+        // Создаём аудио элемент
+        var audio = iframeDoc.createElement('audio');
+        audio.id = 'bg-music';
+        audio.loop = true;
+        audio.volume = 0.5;
+        
+        var source = iframeDoc.createElement('source');
+        source.src = 'music/background.mp3';
+        source.type = 'audio/mpeg';
+        audio.appendChild(source);
+        
+        iframeDoc.body.appendChild(audio);
+        console.log('Audio element added');
+        
+        // Пытаемся воспроизвести
+        audio.play().then(function() {
+            console.log('✅ Music playing');
+        }).catch(function() {
+            console.log('Autoplay blocked, adding button');
+            
+            // Добавляем кнопку
+            var btn = iframeDoc.createElement('button');
+            btn.innerHTML = '🎵 Включить музыку';
+            btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px 20px;background:#ff6b6b;color:white;border:none;border-radius:30px;cursor:pointer;';
+            btn.onclick = function() {
+                audio.play();
+                btn.remove();
+            };
+            iframeDoc.body.appendChild(btn);
+        });
+        
+    } catch(e) {
+        console.error('Music error:', e);
     }
 }
