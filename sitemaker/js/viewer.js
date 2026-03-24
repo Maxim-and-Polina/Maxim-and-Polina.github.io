@@ -154,11 +154,7 @@ function loadData() {
                 data_value['GROOM'] = d_groom;
                 data_value['BRIDE'] = d_bride;
                 data_value['MAIN_DATE'] = d_mdate;
-                if (demo_view) {
-                    data_value['GROOM_TEL'] = '79268887788';
-                    data_value['BRIDE_TEL'] = '79167778877';
-                    data_value["CONTACTS_LINK"] = {"type": "3", "value": "wedwed_russia"};
-                }
+                
                 loadTemplate();
             }
         })
