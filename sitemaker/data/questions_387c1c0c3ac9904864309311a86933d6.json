@@ -1,21 +1,51 @@
 [
     {
-        "id": "",
+        "id": "q1",
         "question": "Ваши предпочтения",
-        "name": "alco[]",
+        "name": "alc",
         "type":"checkbox",
         "answers": [
             {
                 "id": "alco11",
-                "name": "alco[]",
+                "name": "sham",
                 "value": "1",
                 "answer": "Шампанское"
             },
             {
                 "id": "alco21",
-                "name": "alco[]",
+                "name": "ww",
                 "value": "2",
                 "answer": "Белое вино"
+            },
+            {
+                "id": "alco31",
+                "name": "rw",
+                "value": "3",
+                "answer": "Белое вино"
+            },
+            {
+                "id": "alco41",
+                "name": "sam",
+                "value": "4",
+                "answer": "Самогон"
+            },
+            {
+                "id": "alco51",
+                "name": "rum",
+                "value": "5",
+                "answer": "Ром"
+            },
+             {
+                "id": "alco61",
+                "name": "whis",
+                "value": "6",
+                "answer": "Виски"
+            },
+             {
+                "id": "alco71",
+                "name": "non",
+                "value": "7",
+                "answer": "Не пью"
             }
         ]
     }
