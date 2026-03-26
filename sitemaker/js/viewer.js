@@ -1,4 +1,4 @@
-var inp1;
+var inp;
 var cursect = 0;
 var sections = [];
 var offsections = [];
@@ -1424,8 +1424,11 @@ function setFontSize() {
 // }
 //
 function fillQuests() {
-    if (template_val.questions && template_val.questions.length > 0) {
-        var smb = iframe.contents().find('[data-sm-anketa-toggle]');
+    console.log('fillQuests вызвана');
+    
+    if (template_val && template_val.questions && template_val.questions.length > 0) {
+        var $iframe = $('iframe');
+        var smb = $iframe.contents().find('[data-sm-anketa-toggle]');
         var ins = '';
         if (smb.find('.sm-form_preferences').length > 0) {
             ins = ' > .sm-form_preferences';
@@ -1453,17 +1456,16 @@ function fillQuests() {
                     $(this).append(smbt);
                     $(this).append(smbc);
 
-                    var titl = iframe.contents().find('[data-forq="' + sorname + '"]:not([data-sm-anketa])');
+                    var titl = $iframe.contents().find('[data-forq="' + sorname + '"]:not([data-sm-anketa])');
                     while (titl.children().length) {
                         titl = titl.children();
                     }
 
                     $(titl[0]).html(v.question);
-                    var drinks = iframe.contents().find('[data-sm-anketa][data-forq="' + sorname + '"]');
+                    var drinks = $iframe.contents().find('[data-sm-anketa][data-forq="' + sorname + '"]');
                     var tn = drinks.find('.ct-alcotpl').prop("tagName");
                     drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
-                    // Определяем тип вопроса
                     var isRadio = (v.type == "1");
 
                     $.each(v.answers, function (ka, va) {
@@ -1475,7 +1477,6 @@ function fillQuests() {
                         var chb = $(drinks.find('.ct-alcotpl')[ka]);
                         var input = chb.find('input');
 
-                        // Создаём radio или checkbox
                         if (isRadio) {
                             input.attr('type', 'radio');
                             input.attr('name', sorname);
@@ -1496,8 +1497,8 @@ function fillQuests() {
                     drinks.find('.ct-alcotpl [name="alco[]"]').parents('.ct-alcotpl').remove();
                     drinks.find('.ct-alcotpl').removeClass('ct-alcotpl');
                 });
-                iframe.contents().find('[data-sm-anketa-toggle]').removeClass('sm-hidden');
-                iframe.contents().find('[data-forq]').removeClass('sm-hidden');
+                $iframe.contents().find('[data-sm-anketa-toggle]').removeClass('sm-hidden');
+                $iframe.contents().find('[data-forq]').removeClass('sm-hidden');
             }
         });
     }
