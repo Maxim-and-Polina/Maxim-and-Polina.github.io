@@ -1467,7 +1467,7 @@ function fillQuests() {
                     drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
                     // ===== ОПРЕДЕЛЯЕМ ТИП ВОПРОСА =====
-                    var isRadio = (v.type === '1');
+                    var isRadio = (v.type == '1');
                     // ================================
 
                     $.each(v.answers, function (ka, va) {
@@ -1502,16 +1502,18 @@ function fillQuests() {
                             .html(sornamev);
                     })
 
-                    // Для type: "1" (radio) не добавляем текстовое поле
-                    if (!isRadio && typeof v.type != 'undefined' && v.type == '1') {
+                    // Для type: "2" (текстовое поле) или если нет ответов
+                    if (!isRadio) {
                         var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
-                        var smbd = $(smbi).clone();
-                        drinks.append(smbd)
-                        var inp = drinks.find('[data-sm-anketa-name]');
-                        inp.attr('name', sorname)
-                            .attr('id', sorname)
-                            .attr('placeholder', 'Ваш ответ')
-                            .removeAttr('data-sm-anketa-name');
+                        if (smbi) {
+                            var smbd = $(smbi).clone();
+                            drinks.append(smbd)
+                            var inp = drinks.find('[data-sm-anketa-name]');
+                            inp.attr('name', sorname)
+                                .attr('id', sorname)
+                                .attr('placeholder', 'Ваш ответ')
+                                .removeAttr('data-sm-anketa-name');
+                        }
                     }
 
                     smbb.remove();
@@ -1521,24 +1523,10 @@ function fillQuests() {
                 iframe.contents().find('[data-sm-anketa-toggle]').removeClass('sm-hidden');
                 iframe.contents().find('[data-forq]').removeClass('sm-hidden');
             }
-            if (v.answers.length > 0) {
-                $.each(v.answers, function (ka, va) {
-                    var fornam = forqu + '_answer[]';
-                    var fornav = va
-                    if (typeof setPrice == 'undefined') {
-                        fornam = forqu + '_' + va.id + '_answer';
-                        fornav = va.answer;
-                    }
-                    co.find('.ct-input-dynamic_multiplier').before('<div class="ct-input_wrapper ct-input-dynamic"><div class="ct-input_wrapper-item"><label class="ct-input_label">Вариант ответа <span>' + (ka + 1) + '</span></label><input type="text" class="ct-input ct-input_answer" placeholder="Вариант ответа" name="' + fornam + '" value="' + fornav + '"></div><div class="ct-input_remover"></div></div>');
-                })
-            } else {
-                co.find('.ct-input-dynamic_multiplier').before('<div class="ct-input_wrapper ct-input-dynamic ct-hidden"><div class="ct-input_wrapper-item"><label class="ct-input_label">Вариант ответа <span>1</span></label><input type="text" class="ct-input" placeholder="Вариант ответа" name="' + forqu + '_answer[]" value=""></div><div class="ct-input_remover"></div></div>');
-            }
         })
     }
     questfilled = true;
 }
-
 
 function initVideo() {
     var vis = iframe.contents().find('[data-sm-video]');
