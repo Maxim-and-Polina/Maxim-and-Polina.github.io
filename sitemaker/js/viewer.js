@@ -1424,9 +1424,7 @@ function setFontSize() {
 // }
 //
 function fillQuests() {
-    console.log('fillQuests вызвана');
-    
-    if (template_val && template_val.questions && template_val.questions.length > 0) {
+    if (template_val.questions && template_val.questions.length > 0) {
         var $iframe = $('iframe');
         var smb = $iframe.contents().find('[data-sm-anketa-toggle]');
         var ins = '';
@@ -1466,32 +1464,42 @@ function fillQuests() {
                     var tn = drinks.find('.ct-alcotpl').prop("tagName");
                     drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
+                    // Определяем тип: type == "1" - radio, иначе текстовое поле
                     var isRadio = (v.type == "1");
 
-                    $.each(v.answers, function (ka, va) {
-                        var sornamek = sorname + '_' + va.id;
-                        var sornamev = va.answer;
-                        
-                        var smbd = smbb.clone();
-                        drinks.append(smbd);
-                        var chb = $(drinks.find('.ct-alcotpl')[ka]);
-                        var input = chb.find('input');
+                    if (isRadio && v.answers && v.answers.length > 0) {
+                        // Создаём radio-кнопки
+                        $.each(v.answers, function (ka, va) {
+                            var sornamek = sorname + '_' + va.id;
+                            var sornamev = va.answer;
+                            
+                            var smbd = smbb.clone();
+                            drinks.append(smbd);
+                            var chb = $(drinks.find('.ct-alcotpl')[ka]);
+                            var input = chb.find('input');
 
-                        if (isRadio) {
                             input.attr('type', 'radio');
                             input.attr('name', sorname);
-                        } else {
-                            input.attr('type', 'checkbox');
-                            input.attr('name', sorname + '[]');
-                        }
-                        
-                        input.val(va.id);
-                        input.attr('id', sornamek);
+                            input.val(va.id);
+                            input.attr('id', sornamek);
 
-                        chb.find('[data-sm-alcoitem]')
-                            .attr('for', sornamek)
-                            .html(sornamev);
-                    });
+                            chb.find('[data-sm-alcoitem]')
+                                .attr('for', sornamek)
+                                .html(sornamev);
+                        });
+                    } else if (!isRadio) {
+                        // Создаём текстовое поле (type == "2")
+                        var smbi = $iframe.contents().find('[data-sm-anketa-name]')[0];
+                        if (smbi) {
+                            var smbd = $(smbi).clone();
+                            drinks.append(smbd);
+                            var inp = drinks.find('[data-sm-anketa-name]');
+                            inp.attr('name', sorname)
+                                .attr('id', sorname)
+                                .attr('placeholder', 'Ваш ответ')
+                                .removeAttr('data-sm-anketa-name');
+                        }
+                    }
 
                     smbb.remove();
                     drinks.find('.ct-alcotpl [name="alco[]"]').parents('.ct-alcotpl').remove();
