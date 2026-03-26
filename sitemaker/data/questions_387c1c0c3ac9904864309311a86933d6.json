@@ -3,7 +3,7 @@
         "id": "q1",
         "question": "Ваши предпочтения",
         "name": "alc",
-        "type":"radio",
+        "type":"2",
         "answers": [
             {
                 "id": "alco11",
