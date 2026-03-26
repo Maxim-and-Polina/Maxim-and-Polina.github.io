@@ -1433,15 +1433,6 @@ function fillQuests() {
 
         $.each(template_val.questions, function (k, v) {
             var forqu = 'quest-' + v.id;
-            // var qu = $('.ct-panel_header[for="' + forqu + '"]').parents('.ct-addquests-item');
-            // var co = qu.find('.ct-hidden_wrapper');
-            //
-            // qu.find('[name="' + forqu + '_answer[]"]').parents('.ct-input_wrapper').remove();
-            // qu.find('[name="' + forqu + '_question"]').val(v.question);
-            // if (typeof v.type != 'undefined') {
-            //     qu.find('#' + forqu + '-type li[data-type="' + v.type + '"]').click();
-            //     qu.find('#' + forqu + '-type').removeClass('active');
-            // }
             if (smb.length > 0) {
                 $.each(smb, function (ko, vo) {
                     var sorname = forqu + '-' + ko
@@ -1475,6 +1466,10 @@ function fillQuests() {
                     var tn = drinks.find('.ct-alcotpl').prop("tagName");
                     drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
+                    // ===== ОПРЕДЕЛЯЕМ ТИП ВОПРОСА =====
+                    var isRadio = (v.type === '1');
+                    // ================================
+
                     $.each(v.answers, function (ka, va) {
                         var sornamek = sorname + '_' + (ka + 1)
                         var sornamev = va;
@@ -1486,17 +1481,37 @@ function fillQuests() {
                         drinks.append(smbd)
                         var chb = $(drinks.find('.ct-alcotpl')[ka]);
 
-                        chb.find('input').val(ka + 1).attr('name', sorname + '[]').attr('id', sornamek);
-                        chb.find('[data-sm-alcoitem]').attr('for', sornamek).html(sornamev);
+                        // ===== ИСПРАВЛЕНИЕ: radio вместо checkbox =====
+                        if (isRadio) {
+                            chb.find('input')
+                                .attr('type', 'radio')
+                                .val(va.id)
+                                .attr('name', sorname)  // для radio name без []
+                                .attr('id', sornamek);
+                        } else {
+                            chb.find('input')
+                                .attr('type', 'checkbox')
+                                .val(ka + 1)
+                                .attr('name', sorname + '[]')
+                                .attr('id', sornamek);
+                        }
+                        // ============================================
+
+                        chb.find('[data-sm-alcoitem]')
+                            .attr('for', sornamek)
+                            .html(sornamev);
                     })
 
-
-                    if (typeof v.type != 'undefined' && v.type == '1') {
+                    // Для type: "1" (radio) не добавляем текстовое поле
+                    if (!isRadio && typeof v.type != 'undefined' && v.type == '1') {
                         var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
                         var smbd = $(smbi).clone();
                         drinks.append(smbd)
                         var inp = drinks.find('[data-sm-anketa-name]');
-                        inp.attr('name', sorname).attr('id', sorname).attr('placeholder', 'Ваш ответ').removeAttr('data-sm-anketa-name');
+                        inp.attr('name', sorname)
+                            .attr('id', sorname)
+                            .attr('placeholder', 'Ваш ответ')
+                            .removeAttr('data-sm-anketa-name');
                     }
 
                     smbb.remove();
