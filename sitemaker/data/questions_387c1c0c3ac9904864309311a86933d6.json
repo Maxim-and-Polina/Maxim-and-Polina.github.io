@@ -1,9 +1,9 @@
 [
     {
-        "id": "q1",
+        "id": "1",
         "question": "Ваши предпочтения",
         "name": "alc",
-        "type":"2",
+        "type":"1",
         "answers": [
             {
                 "id": "alco11",
