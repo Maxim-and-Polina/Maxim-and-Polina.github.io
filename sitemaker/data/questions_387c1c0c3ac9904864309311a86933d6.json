@@ -2,50 +2,35 @@
     {
         "id": "1",
         "question": "Ваши предпочтения",
-        "name": "alc",
-        "type":"1",
+        "type": "1",
         "answers": [
             {
                 "id": "alco11",
-                "name": "sham",
-                "value": "1",
                 "answer": "Шампанское"
             },
             {
                 "id": "alco21",
-                "name": "ww",
-                "value": "2",
                 "answer": "Белое вино"
             },
             {
                 "id": "alco31",
-                "name": "rw",
-                "value": "3",
-                "answer": "Белое вино"
+                "answer": "Красное вино"
             },
             {
                 "id": "alco41",
-                "name": "sam",
-                "value": "4",
                 "answer": "Самогон"
             },
             {
                 "id": "alco51",
-                "name": "rum",
-                "value": "5",
                 "answer": "Ром"
             },
-             {
+            {
                 "id": "alco61",
-                "name": "whis",
-                "value": "6",
                 "answer": "Виски"
             },
-             {
+            {
                 "id": "alco71",
-                "name": "non",
-                "value": "7",
-                "answer": "Не пью"
+                "answer": "Не пью алкоголь"
             }
         ]
     }
