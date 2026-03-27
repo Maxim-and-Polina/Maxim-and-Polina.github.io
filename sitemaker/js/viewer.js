@@ -524,6 +524,10 @@ function loadTemplate(){
             var va = '';
             $.each(iv, function (k, v) {
                 va += '<div class="sm_colors"><div style="background: ' + v + '"></div></div>';
+                // Добавляем промежуток после 6-го цвета (индекс 5, так как счёт с 0)
+                if (k === 5) {
+                va += '<div class="sm_colors_separator"></div>';
+                }
             })
             iv = va;
         }
