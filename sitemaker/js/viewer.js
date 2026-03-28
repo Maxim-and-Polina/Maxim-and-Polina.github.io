@@ -990,7 +990,7 @@ function loadTemplate(){
                                     var smbd = $(smbi).clone();
                                     drinks.append(smbd)
                                     var inp = drinks.find('[data-sm-anketa-name]');
-                                    inp.attr('name', forqu).attr('id', forqu + '_' + ko).attr('placeholder', 'Ваш ответ').removeAttr('data-sm-anketa-name');
+                                    //inp.attr('name', forqu).attr('id', forqu + '_' + ko).attr('placeholder', 'Ваш ответ').removeAttr('data-sm-anketa-name');
                                 }
 
                                 smbb.remove();
