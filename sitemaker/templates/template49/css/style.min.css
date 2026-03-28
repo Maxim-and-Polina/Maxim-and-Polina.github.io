@@ -111,6 +111,10 @@
     --url-bg: url("../img/bg.webp"), #F6F6F6
 }
 
+.sm_colors_separator {
+    border: none !important;
+}
+
 body {
     position: relative
 }
