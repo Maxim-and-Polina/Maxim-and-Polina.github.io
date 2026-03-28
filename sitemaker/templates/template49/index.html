@@ -838,141 +838,195 @@
             })
         </script>
 		<script>
-		// Обработчик отправки анкеты
+// ============================================
+// ПОЛНЫЙ ОБРАБОТЧИК ОТПРАВКИ АНКЕТЫ
+// ============================================
+
 (function() {
-    console.log('Инициализация обработчика анкеты');
+    console.log('🔧 Инициализация обработчика анкеты');
     
-    function initAnketaHandler() {
+    // Функция "Спасибо"
+    function thankYou() {
+        console.log('✅ thankYou вызвана');
+        var thanksDiv = document.querySelector('.sm-thanks');
+        if (thanksDiv) {
+            thanksDiv.style.display = 'flex';
+            setTimeout(function() {
+                thanksDiv.style.display = 'none';
+            }, 3000);
+        } else {
+            alert('Спасибо! Ваш ответ сохранен');
+        }
+    }
+    
+    // Функция для сбора данных из анкеты
+    function collectFormData() {
+        var data = {};
+        
+        // Имя и фамилия
+        var nameInput = document.querySelector('[data-sm-anketa-name]');
+        data.name = nameInput ? nameInput.value : '';
+        
+        // Ответ на вопрос о присутствии (radio)
+        var answerRadio = document.querySelector('[data-answer]:checked');
+        data.answer = answerRadio ? answerRadio.value : 0;
+        
+        // Спутник/спутница
+        var companyInput = document.querySelector('[data-sm-anketa-company]');
+        data.company = companyInput ? companyInput.value : '';
+        
+        // Напитки (checkbox)
+        var alcoBoxes = document.querySelectorAll('input[name="alco[]"]:checked');
+        data.alco = [];
+        for (var i = 0; i < alcoBoxes.length; i++) {
+            data.alco.push(alcoBoxes[i].value);
+        }
+        
+        // Дополнительные вопросы
+        data.quest = {};
+        var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
+        for (var i = 0; i < questContainers.length; i++) {
+            var qid = questContainers[i].getAttribute('data-forq');
+            data.quest[qid] = [];
+            var checkedInputs = questContainers[i].querySelectorAll('input:checked');
+            for (var j = 0; j < checkedInputs.length; j++) {
+                data.quest[qid].push(checkedInputs[j].value);
+            }
+        }
+        
+        return data;
+    }
+    
+    // Функция отправки данных
+    function sendFormData(data, callback) {
+        console.log('📤 Отправка данных:', data);
+        
+        // ===== ЗАМЕНИТЕ ЭТОТ URL НА ВАШ ОТ GOOGLE APPS SCRIPT =====
+        var googleScriptUrl = 'https://script.google.com/macros/s/ВАШ_ИД/exec';
+        // ========================================================
+        
+        // Используем fetch для отправки
+        fetch(googleScriptUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                name: data.name,
+                answer: data.answer,
+                company: data.company,
+                alco: JSON.stringify(data.alco),
+                quest: JSON.stringify(data.quest),
+                project: window.project || ''
+            })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(result) {
+            console.log('✅ Отправка успешна:', result);
+            if (callback) callback(null, result);
+        })
+        .catch(function(error) {
+            console.error('❌ Ошибка отправки:', error);
+            if (callback) callback(error, null);
+        });
+    }
+    
+    // Инициализация кнопки
+    var sending = false;
+    
+    function initSendButton() {
         var sendBtn = document.querySelector('[data-sm-anketa-send]');
+        
         if (!sendBtn) {
-            console.log('Кнопка отправки не найдена');
+            console.log('❌ Кнопка отправки не найдена, повторная попытка через 1 секунду...');
+            setTimeout(initSendButton, 1000);
             return;
         }
         
-        console.log('Кнопка отправки найдена, добавляю обработчик');
+        console.log('✅ Кнопка отправки найдена');
         
-        var sending = false;
+        // Удаляем старый обработчик, если есть
+        var newBtn = sendBtn.cloneNode(true);
+        sendBtn.parentNode.replaceChild(newBtn, sendBtn);
+        sendBtn = newBtn;
         
+        // Добавляем новый обработчик
         sendBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            if (sending) return;
-            
-            console.log('Кнопка отправки нажата');
-            
-            // Сбор данных
-            var nameInput = document.querySelector('[data-sm-anketa-name]');
-            var name = nameInput ? nameInput.value : '';
-            
-            var answerRadios = document.querySelectorAll('[data-answer]');
-            var answer = 0;
-            for (var i = 0; i < answerRadios.length; i++) {
-                if (answerRadios[i].checked) {
-                    answer = answerRadios[i].value;
-                    break;
-                }
-            }
-            
-            var companyInput = document.querySelector('[data-sm-anketa-company]');
-            var company = companyInput ? companyInput.value : '';
-            
-            var alcoCheckboxes = document.querySelectorAll('input[name="alco[]"]:checked');
-            var alc = [];
-            for (var i = 0; i < alcoCheckboxes.length; i++) {
-                alc.push(alcoCheckboxes[i].value);
-            }
-            
-            // Дополнительные вопросы
-            var quest = {};
-            var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
-            for (var i = 0; i < questContainers.length; i++) {
-                var qid = questContainers[i].getAttribute('data-forq');
-                quest[qid] = [];
-                var checkedInputs = questContainers[i].querySelectorAll('input:checked');
-                for (var j = 0; j < checkedInputs.length; j++) {
-                    quest[qid].push(checkedInputs[j].value);
-                }
-            }
-            
-            console.log('Собранные данные:', {
-                name: name,
-                answer: answer,
-                company: company,
-                alco: alc,
-                quest: quest
-            });
-            
-            if (name === '' || answer == 0) {
-                alert('Пожалуйста, заполните имя и ответьте на вопрос о присутствии');
+            if (sending) {
+                console.log('⏳ Отправка уже выполняется, подождите...');
                 return;
             }
             
+            console.log('🖱️ Кнопка отправки нажата');
+            
+            // Собираем данные
+            var formData = collectFormData();
+            
+            console.log('📋 Собранные данные:', formData);
+            
+            // Валидация
+            if (formData.name === '') {
+                alert('Пожалуйста, введите ваше имя и фамилию');
+                return;
+            }
+            
+            if (formData.answer == 0) {
+                alert('Пожалуйста, ответьте на вопрос о вашем присутствии');
+                return;
+            }
+            
+            // Отправляем
             sending = true;
             
-            // ===== ОТПРАВКА В GOOGLE SHEETS =====
-            var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzVMS8JDVP81Hr2-nlDee_bH9NcZJyxAMWttW8R2AWq-WsggvEq1YcBHdYWcxU7nBOs/exec';
+            // Показываем индикатор загрузки (опционально)
+            sendBtn.textContent = 'Отправка...';
+            sendBtn.disabled = true;
             
-            // Используем fetch вместо jQuery
-            fetch(googleScriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    name: name,
-                    answer: answer,
-                    company: company,
-                    alco: JSON.stringify(alc),
-                    quest: JSON.stringify(quest),
-                    project: project || ''
-                })
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                console.log('✅ Данные отправлены:', data);
-                // Показываем сообщение "Спасибо"
-                var thanksDiv = document.querySelector('.sm-thanks');
-                if (thanksDiv) {
-                    thanksDiv.style.display = 'flex';
-                    setTimeout(function() {
-                        thanksDiv.style.display = 'none';
-                    }, 3000);
-                } else {
-                    alert('Спасибо! Ваш ответ сохранен');
+            sendFormData(formData, function(error, result) {
+                sending = false;
+                sendBtn.textContent = 'Отправить';
+                sendBtn.disabled = false;
+                
+                if (error) {
+                    alert('Ошибка отправки: ' + error.message);
+                    return;
                 }
-                sending = false;
-            })
-            .catch(function(error) {
-                console.error('❌ Ошибка отправки:', error);
-                alert('Не удалось отправить данные. Пожалуйста, попробуйте позже.');
-                sending = false;
+                
+                // Показываем "Спасибо"
+                thankYou();
+                
+                // Очищаем форму (опционально)
+                var nameInput = document.querySelector('[data-sm-anketa-name]');
+                if (nameInput) nameInput.value = '';
+                
+                var answerRadios = document.querySelectorAll('[data-answer]');
+                for (var i = 0; i < answerRadios.length; i++) {
+                    answerRadios[i].checked = false;
+                }
+                
+                var alcoBoxes = document.querySelectorAll('input[name="alco[]"]');
+                for (var i = 0; i < alcoBoxes.length; i++) {
+                    alcoBoxes[i].checked = false;
+                }
             });
         });
+        
+        console.log('✅ Обработчик кнопки добавлен');
     }
     
     // Запускаем после загрузки страницы
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAnketaHandler);
+        document.addEventListener('DOMContentLoaded', initSendButton);
     } else {
-        initAnketaHandler();
+        initSendButton();
     }
 })();
-			function thankYou() {
-    			console.log('thankYou called');
-    			var thanksDiv = document.querySelector('.sm-thanks');
-    			if (thanksDiv) {
-        			thanksDiv.style.display = 'flex';
-        			setTimeout(function() {
-            		thanksDiv.style.display = 'none';
-        			}, 3000);
-    			} else {
-        			alert('Спасибо! Ваш ответ сохранен');
-    			}
-			}
-		</script>
+</script>
         <link rel="stylesheet" href="../../css/style_intro.min.css">
         <div class="sm-opener" data-intro="3">
             <img data-sm-src="COVER_PHOTO" class="sm-opener_background">
