@@ -313,7 +313,20 @@ a.clr {
     line-height: 120%;
     color: var(--clr-text-2);
 }
+@media (max-width: 500px) {
+    .mens {
+    margin: 0px 0px 0px 0px;
+}
 
+a.clr {
+    cursor: default;
+    text-align: center;
+    font-family: "SMTextsFont", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 120%;
+    color: var(--clr-text-2);
+}
 .sm-madewithlove img {
     width: 120px;
     vertical-align: middle;
