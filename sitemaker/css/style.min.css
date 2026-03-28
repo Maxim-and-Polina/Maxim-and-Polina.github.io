@@ -302,6 +302,9 @@ input,label {
 
 .mens {
     margin: -80px 0px -50px 790px;
+    animation-delay: 3s;
+    animation: fadeText 1s ease-in-out both;
+    transform-origin: 50% 50%;
 }
 
 a.clr {
@@ -316,6 +319,9 @@ a.clr {
 @media (max-width: 500px) {
  .mens {
     margin: -20px 0px -10px 240px;
+    animation-delay: 3s;
+    animation: fadeText 1s ease-in-out both;
+    transform-origin: 50% 50%;
     }
 
 a.clr {
