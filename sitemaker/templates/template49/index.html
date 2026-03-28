@@ -836,6 +836,141 @@
                     }
                 });
             })
+
+// Обработчик отправки анкеты
+(function() {
+    console.log('Инициализация обработчика анкеты');
+    
+    function initAnketaHandler() {
+        var sendBtn = document.querySelector('[data-sm-anketa-send]');
+        if (!sendBtn) {
+            console.log('Кнопка отправки не найдена');
+            return;
+        }
+        
+        console.log('Кнопка отправки найдена, добавляю обработчик');
+        
+        var sending = false;
+        
+        sendBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (sending) return;
+            
+            console.log('Кнопка отправки нажата');
+            
+            // Сбор данных
+            var nameInput = document.querySelector('[data-sm-anketa-name]');
+            var name = nameInput ? nameInput.value : '';
+            
+            var answerRadios = document.querySelectorAll('[data-answer]');
+            var answer = 0;
+            for (var i = 0; i < answerRadios.length; i++) {
+                if (answerRadios[i].checked) {
+                    answer = answerRadios[i].value;
+                    break;
+                }
+            }
+            
+            var companyInput = document.querySelector('[data-sm-anketa-company]');
+            var company = companyInput ? companyInput.value : '';
+            
+            var alcoCheckboxes = document.querySelectorAll('input[name="alco[]"]:checked');
+            var alc = [];
+            for (var i = 0; i < alcoCheckboxes.length; i++) {
+                alc.push(alcoCheckboxes[i].value);
+            }
+            
+            // Дополнительные вопросы
+            var quest = {};
+            var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
+            for (var i = 0; i < questContainers.length; i++) {
+                var qid = questContainers[i].getAttribute('data-forq');
+                quest[qid] = [];
+                var checkedInputs = questContainers[i].querySelectorAll('input:checked');
+                for (var j = 0; j < checkedInputs.length; j++) {
+                    quest[qid].push(checkedInputs[j].value);
+                }
+            }
+            
+            console.log('Собранные данные:', {
+                name: name,
+                answer: answer,
+                company: company,
+                alco: alc,
+                quest: quest
+            });
+            
+            if (name === '' || answer == 0) {
+                alert('Пожалуйста, заполните имя и ответьте на вопрос о присутствии');
+                return;
+            }
+            
+            sending = true;
+            
+            // ===== ОТПРАВКА В GOOGLE SHEETS =====
+            var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzVMS8JDVP81Hr2-nlDee_bH9NcZJyxAMWttW8R2AWq-WsggvEq1YcBHdYWcxU7nBOs/exec';
+            
+            // Используем fetch вместо jQuery
+            fetch(googleScriptUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    name: name,
+                    answer: answer,
+                    company: company,
+                    alco: JSON.stringify(alc),
+                    quest: JSON.stringify(quest),
+                    project: project || ''
+                })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('✅ Данные отправлены:', data);
+                // Показываем сообщение "Спасибо"
+                var thanksDiv = document.querySelector('.sm-thanks');
+                if (thanksDiv) {
+                    thanksDiv.style.display = 'flex';
+                    setTimeout(function() {
+                        thanksDiv.style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert('Спасибо! Ваш ответ сохранен');
+                }
+                sending = false;
+            })
+            .catch(function(error) {
+                console.error('❌ Ошибка отправки:', error);
+                alert('Не удалось отправить данные. Пожалуйста, попробуйте позже.');
+                sending = false;
+            });
+        });
+    }
+    
+    // Запускаем после загрузки страницы
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAnketaHandler);
+    } else {
+        initAnketaHandler();
+    }
+})();
+			function thankYou() {
+    			console.log('thankYou called');
+    			var thanksDiv = document.querySelector('.sm-thanks');
+    			if (thanksDiv) {
+        			thanksDiv.style.display = 'flex';
+        			setTimeout(function() {
+            		thanksDiv.style.display = 'none';
+        			}, 3000);
+    			} else {
+        			alert('Спасибо! Ваш ответ сохранен');
+    			}
+			}
         </script>
         <link rel="stylesheet" href="../../css/style_intro.min.css">
         <div class="sm-opener" data-intro="3">
