@@ -901,15 +901,14 @@
         var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
         for (var i = 0; i < questContainers.length; i++) {
             var qid = questContainers[i].getAttribute('data-forq');
-            data.quest[qid] = [];
             var checkedInputs = questContainers[i].querySelectorAll('input:checked');
             for (var j = 0; j < checkedInputs.length; j++) {
-                data.quest[qid].push(checkedInputs[j].value);
+                data.qid = checkedInputs ? checkedInputs.value : 0;
             }
         }
 		
-        data.alco=data.quest[quest-1];
-		data.food=data.quest[quest-2];
+        data.alco=data.'quest-1';
+		data.food=data.'quest-2';
 		
         return data;
     }
