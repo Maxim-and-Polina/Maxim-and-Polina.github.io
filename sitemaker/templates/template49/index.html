@@ -977,9 +977,10 @@
             body: new URLSearchParams({
                 name: data.name,
                 answer: data.answer,
-                company: data.company,
-                alco: JSON.stringify(data.alco),
-                quest: JSON.stringify(data.quest),
+                //company: data.company,
+                //alco: JSON.stringify(data.alco),
+                quest_1: data.quest_1,
+				quest_2: data.quest_2,
                 source: isModal ? 'modal' : 'main'
             })
         })
