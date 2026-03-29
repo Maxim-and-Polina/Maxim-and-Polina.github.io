@@ -904,7 +904,7 @@
             var qid = questContainers[i].getAttribute('data-forq');
             var checkedInputs = questContainers[i].querySelectorAll('input:checked');
             for (var j = 0; j < checkedInputs.length; j++) {
-                data.qid = checkedInputs ? checkedInputs.value : 0;
+                data.qid.push(checkedInputs[j].value);
             }
         }
 		
