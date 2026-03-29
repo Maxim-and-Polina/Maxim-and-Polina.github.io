@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8">
@@ -500,7 +500,7 @@
                                 </div>
                             </div>-->
                             <div class="sm-form__block" data-sm-anketa-toggle>
-                                    <div class=" bold" data-sm-text="ANKETA_DRINKS_QUESTION"></div>
+                                <div class=" bold" data-sm-text="ANKETA_DRINKS_QUESTION"></div>
                                     <div class="sm-form__drinks">
                                         <div class="sm-form__drinks-check mr-40px" data-sm-anketa="1">
                                             <div class="sm-form__item_radio ct-alcotpl">
@@ -858,7 +858,7 @@
         var answerRadio = form.querySelector('[data-answer]:checked');
         data.answer = answerRadio ? answerRadio.value : 0;
         
-        // Спутник/спутница
+        /*/ Спутник/спутница
         var companyInput = form.querySelector('[data-sm-anketa-company]');
         data.company = companyInput ? companyInput.value : '';
         
@@ -884,8 +884,17 @@
                     data.quest[qid].push(checkedInputs[j].value);
                 }
             }
+        }*/
+        var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
+        for (var i = 0; i < questContainers.length; i++) {
+            var qid = questContainers[i].getAttribute('data-forq');
+            var checkedInputs = questContainers[i].querySelectorAll('input:checked');
+            for (var j = 0; j < checkedInputs.length; j++) {
+                if(checkedInputs[j].value != []){
+				data[qid] = checkedInputs[j].value;
+            	}
+			}
         }
-        
         return data;
     }
     
