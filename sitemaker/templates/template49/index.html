@@ -840,87 +840,126 @@
         </script>
 		<script>
 // ============================================
-// ПОЛНЫЙ ОБРАБОТЧИК ОТПРАВКИ АНКЕТЫ
+// УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК ДЛЯ ВСЕХ КНОПОК ОТПРАВКИ
 // ============================================
 
 (function() {
-    console.log('🔧 Инициализация обработчика анкеты');
+    console.log('🔧 Инициализация универсального обработчика анкеты');
     
-    // Функция "Спасибо"
-   function thankYou() {
-    console.log('✅ thankYou вызвана');
-    
-    // Делаем кнопку недоступной
-    var sendBtn = document.querySelector('[data-sm-anketa-send]');
-    if (sendBtn) {
-        sendBtn.disabled = true;
-        sendBtn.style.opacity = '0.5';
-        sendBtn.style.cursor = 'not-allowed';
-        sendBtn.textContent = 'Отправлено';
-    }
-    
-    // Показываем сообщение "Спасибо"
-    var thanksDiv = document.querySelector('.sm-thanks');
-    if (thanksDiv) {
-        thanksDiv.style.display = 'flex';
-        thanksDiv.style.visibility = 'visible';
-        thanksDiv.style.opacity = '1';
-        
-        setTimeout(function() {
-            thanksDiv.style.display = 'none';
-        }, 3000);
-    } else {
-        alert('Спасибо! Ваш ответ сохранен');
-    }
-}
-    
-    // Функция для сбора данных из анкеты
-    function collectFormData() {
+    // Функция сбора данных из любой формы
+    function collectFormData(form) {
         var data = {};
         
         // Имя и фамилия
-        var nameInput = document.querySelector('[data-sm-anketa-name]');
+        var nameInput = form.querySelector('[data-sm-anketa-name]');
         data.name = nameInput ? nameInput.value : '';
         
         // Ответ на вопрос о присутствии (radio)
-        var answerRadio = document.querySelector('[data-answer]:checked');
+        var answerRadio = form.querySelector('[data-answer]:checked');
         data.answer = answerRadio ? answerRadio.value : 0;
         
-        /* Спутник/спутница
-        var companyInput = document.querySelector('[data-sm-anketa-company]');
+        // Спутник/спутница
+        var companyInput = form.querySelector('[data-sm-anketa-company]');
         data.company = companyInput ? companyInput.value : '';
         
         // Напитки (checkbox)
-        var alcoBoxes = document.querySelectorAll('input[name="alco[]"]:checked');
+        var alcoBoxes = form.querySelectorAll('input[name="alco[]"]:checked');
         data.alco = [];
         for (var i = 0; i < alcoBoxes.length; i++) {
-            data.alco.push(alcoBoxes[i].value);
-        }*/
+            if (alcoBoxes[i] && alcoBoxes[i].value) {
+                data.alco.push(alcoBoxes[i].value);
+            }
+        }
         
         // Дополнительные вопросы
-        var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
+        data.quest = {};
+        var questContainers = form.querySelectorAll('[data-sm-anketa][data-forq]');
         for (var i = 0; i < questContainers.length; i++) {
-            var qid = questContainers[i].getAttribute('data-forq');
-            var checkedInputs = questContainers[i].querySelectorAll('input:checked');
-            for (var j = 0; j < checkedInputs.length; j++) {
-                if(checkedInputs[j].value != []){
-				data[qid] = checkedInputs[j].value;
-            	}
-			}
+            var container = questContainers[i];
+            var qid = container.getAttribute('data-forq');
+            if (qid) {
+                data.quest[qid] = [];
+                var checkedInputs = container.querySelectorAll('input:checked');
+                for (var j = 0; j < checkedInputs.length; j++) {
+                    data.quest[qid].push(checkedInputs[j].value);
+                }
+            }
         }
-		
+        
         return data;
     }
     
+    // Функция проверки валидности данных
+    function validateFormData(data) {
+        if (!data.name || data.name === '') {
+            alert('Пожалуйста, введите ваше имя и фамилию');
+            return false;
+        }
+        
+        if (data.answer == 0) {
+            alert('Пожалуйста, ответьте на вопрос о вашем присутствии');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Функция показа сообщения "Спасибо"
+    function showThankYou() {
+        var thanksDiv = document.querySelector('.sm-thanks');
+        if (thanksDiv) {
+            thanksDiv.style.display = 'flex';
+            thanksDiv.style.visibility = 'visible';
+            thanksDiv.style.opacity = '1';
+            setTimeout(function() {
+                thanksDiv.style.display = 'none';
+            }, 3000);
+        } else {
+            alert('Спасибо! Ваш ответ сохранен');
+        }
+    }
+    
+    // Функция закрытия модального окна
+    function closeModal() {
+        var modal = document.querySelector('.sm-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Функция очистки формы после отправки
+    function clearForm(form) {
+        // Очищаем поле имени
+        var nameInput = form.querySelector('[data-sm-anketa-name]');
+        if (nameInput) nameInput.value = '';
+        
+        // Снимаем все radio
+        var answerRadios = form.querySelectorAll('[data-answer]');
+        for (var i = 0; i < answerRadios.length; i++) {
+            answerRadios[i].checked = false;
+        }
+        
+        // Снимаем все checkbox
+        var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+        }
+        
+        // Очищаем поле спутника
+        var companyInput = form.querySelector('[data-sm-anketa-company]');
+        if (companyInput) companyInput.value = '';
+    }
+    
     // Функция отправки данных
-    function sendFormData(data, callback) {
-        console.log('📤 Отправка данных:', data);
+    function sendFormData(data, button, form, isModal) {
+        // Блокируем кнопку
+        button.disabled = true;
+        var originalText = button.textContent;
+        button.textContent = 'Отправка...';
         
-        // ===== ЗАМЕНИТЕ ЭТОТ URL НА ВАШ ОТ GOOGLE APPS SCRIPT =====
+        // Ваш URL Google Apps Script
         var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzVMS8JDVP81Hr2-nlDee_bH9NcZJyxAMWttW8R2AWq-WsggvEq1YcBHdYWcxU7nBOs/exec';
-        // ========================================================
         
-        // Используем fetch для отправки
         fetch(googleScriptUrl, {
             method: 'POST',
             headers: {
@@ -929,9 +968,10 @@
             body: new URLSearchParams({
                 name: data.name,
                 answer: data.answer,
-                quest_1:  data.quest_1,
-				quest_2: data.quest_2,
-                project: window.project || ''
+                company: data.company,
+                alco: JSON.stringify(data.alco),
+                quest: JSON.stringify(data.quest),
+                source: isModal ? 'modal' : 'main'
             })
         })
         .then(function(response) {
@@ -939,105 +979,105 @@
         })
         .then(function(result) {
             console.log('✅ Отправка успешна:', result);
-            if (callback) callback(null, result);
+            
+            // Показываем "Спасибо"
+            showThankYou();
+            
+            // Очищаем форму
+            clearForm(form);
+            
+            // Если это модальное окно, закрываем его
+            if (isModal) {
+                closeModal();
+            }
+            
+            // Разблокируем кнопку
+            button.disabled = false;
+            button.textContent = originalText;
         })
         .catch(function(error) {
             console.error('❌ Ошибка отправки:', error);
-            if (callback) callback(error, null);
+            alert('Ошибка отправки. Пожалуйста, попробуйте позже.');
+            
+            // Разблокируем кнопку
+            button.disabled = false;
+            button.textContent = originalText;
         });
     }
     
-    // Инициализация кнопки
-    var sending = false;
-    
-    function initSendButton() {
-        var sendBtn = document.querySelector('[data-sm-anketa-send]');
+    // ===== ОСНОВНАЯ ФУНКЦИЯ: ИНИЦИАЛИЗАЦИЯ ВСЕХ КНОПОК =====
+    function initAllButtons() {
+        // Находим ВСЕ кнопки отправки на странице
+        var allButtons = document.querySelectorAll('[data-sm-anketa-send]');
         
-        if (!sendBtn) {
-            console.log('❌ Кнопка отправки не найдена, повторная попытка через 1 секунду...');
-            setTimeout(initSendButton, 1000);
+        console.log('🔍 Найдено кнопок отправки:', allButtons.length);
+        
+        if (allButtons.length === 0) {
+            console.log('❌ Кнопки отправки не найдены');
             return;
         }
         
-        console.log('✅ Кнопка отправки найдена');
-        
-        // Удаляем старый обработчик, если есть
-        var newBtn = sendBtn.cloneNode(true);
-        sendBtn.parentNode.replaceChild(newBtn, sendBtn);
-        sendBtn = newBtn;
-        
-        // Добавляем новый обработчик
-        sendBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        // Перебираем каждую кнопку
+        allButtons.forEach(function(button, index) {
+            console.log('📌 Обработка кнопки ' + (index + 1));
             
-            if (sending) {
-                console.log('⏳ Отправка уже выполняется, подождите...');
+            // Определяем, находится ли кнопка в модальном окне
+            var isModal = button.closest('.sm-modal') !== null;
+            console.log('   В модальном окне?', isModal ? 'Да' : 'Нет');
+            
+            // Находим форму, в которой находится кнопка
+            var form = button.closest('form');
+            
+            if (!form) {
+                console.log('   ⚠️ Форма не найдена, ищем родительский контейнер');
+                // Если кнопка не внутри form, ищем родительский контейнер с анкетой
+                form = button.closest('[data-sm-anketa-toggle], .sm-questionnaire, .sm-form');
+            }
+            
+            if (!form) {
+                console.log('   ❌ Контейнер формы не найден, пропускаем');
                 return;
             }
             
-            console.log('🖱️ Кнопка отправки нажата');
+            console.log('   ✅ Форма найдена');
             
-            // Собираем данные
-            var formData = collectFormData();
+            // Удаляем старый обработчик (если есть) и добавляем новый
+            var newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            button = newButton;
             
-            console.log('📋 Собранные данные:', formData);
-            
-            // Валидация
-            if (formData.name === '') {
-                alert('Пожалуйста, введите ваше имя и фамилию');
-                return;
-            }
-            
-            if (formData.answer == 0) {
-                alert('Пожалуйста, ответьте на вопрос о вашем присутствии');
-                return;
-            }
-            
-            // Отправляем
-            sending = true;
-            
-            // Показываем индикатор загрузки (опционально)
-            sendBtn.textContent = 'Отправка...';
-            sendBtn.disabled = true;
-            
-            sendFormData(formData, function(error, result) {
-                sending = false;
-                sendBtn.textContent = 'Отправить';
-                sendBtn.disabled = false;
+            // Добавляем обработчик события
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                if (error) {
-                    alert('Ошибка отправки: ' + error.message);
+                console.log('🖱️ Кнопка отправки нажата');
+                console.log('   Источник:', isModal ? 'Модальное окно' : 'Основная анкета');
+                
+                // Собираем данные из формы
+                var formData = collectFormData(form);
+                console.log('📋 Собранные данные:', formData);
+                
+                // Проверяем данные
+                if (!validateFormData(formData)) {
                     return;
                 }
                 
-                // Показываем "Спасибо"
-                thankYou();
-                
-                // Очищаем форму (опционально)
-                var nameInput = document.querySelector('[data-sm-anketa-name]');
-                if (nameInput) nameInput.value = '';
-                
-                var answerRadios = document.querySelectorAll('[data-answer]');
-                for (var i = 0; i < answerRadios.length; i++) {
-                    answerRadios[i].checked = false;
-                }
-                
-                var alcoBoxes = document.querySelectorAll('input[name="alco[]"]');
-                for (var i = 0; i < alcoBoxes.length; i++) {
-                    alcoBoxes[i].checked = false;
-                }
+                // Отправляем данные
+                sendFormData(formData, button, form, isModal);
             });
+            
+            console.log('   ✅ Обработчик добавлен');
         });
         
-        console.log('✅ Обработчик кнопки добавлен');
+        console.log('✅ Все кнопки отправки инициализированы');
     }
     
-    // Запускаем после загрузки страницы
+    // Запускаем инициализацию после загрузки страницы
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initSendButton);
+        document.addEventListener('DOMContentLoaded', initAllButtons);
     } else {
-        initSendButton();
+        initAllButtons();
     }
 })();
 </script>
