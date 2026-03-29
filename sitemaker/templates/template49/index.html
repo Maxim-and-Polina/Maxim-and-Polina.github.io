@@ -904,8 +904,10 @@
 			data[qid] = [];
             var checkedInputs = questContainers[i].querySelectorAll('input:checked');
             for (var j = 0; j < checkedInputs.length; j++) {
-                data[qid].push(checkedInputs[j].value);
-            }
+                if(checkedInputs[j].value != []){
+				data[qid] = checkedInputs[j].value;
+            	}
+			}
         }
 		
         return data;
