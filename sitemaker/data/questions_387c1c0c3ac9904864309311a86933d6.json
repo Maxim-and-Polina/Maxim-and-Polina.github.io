@@ -1,6 +1,6 @@
 [
     {
-        "id": "alco",
+        "id": "1",
         "question": "Ваши предпочтения",
         "type": "1",
         "answers": [
@@ -35,7 +35,7 @@
         ]
     },
     {
-        "id": "food",
+        "id": "2",
         "question": "Мясо или Рыба?",
         "type": "1",
         "answers": [
