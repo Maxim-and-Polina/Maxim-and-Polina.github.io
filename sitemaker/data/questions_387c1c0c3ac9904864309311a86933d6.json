@@ -1,59 +1,50 @@
 [
     {
-        "id": "1",
+        "id": "alco",
         "question": "Ваши предпочтения",
         "type": "1",
         "answers": [
             {
-                "id": "alco11",
-                "value": "1",
+                "id": "1",
                 "answer": "Шампанское"
             },
             {
-                "id": "alco21",
-                "value": "2",
+                "id": "2",
                 "answer": "Белое вино"
             },
             {
-                "id": "alco31",
-                "value": "3",
+                "id": "3",
                 "answer": "Красное вино"
             },
-            {
-                "id": "alco41",
-                "value": "4",
+            }
+                "id": "4",
                 "answer": "Самогон"
             },
             {
-                "id": "alco51",
-                "value": "5",
+                "id": "5",
                 "answer": "Ром"
             },
             {
-                "id": "alco61",
-                "value": "6",
+                "id": "6",
                 "answer": "Виски"
             },
             {
-                "id": "alco71",
-                "value": "7",
+                "id": "7",
                 "answer": "Не пью алкоголь"
             }
         ]
     },
     {
-        "id": "2",
+        "id": "food",
         "question": "Мясо или Рыба?",
         "type": "1",
         "answers": [
             {
-                "id": "meat",
-                "value": "1",
+                "id": "1",
                 "answer": "Мясо"
             },
             {
-                "id": "fish",
-                "value": "2",
+                "id": "2",
                 "answer": "Рыба"
             }
         ]
