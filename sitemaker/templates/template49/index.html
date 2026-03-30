@@ -1101,6 +1101,18 @@
     }
 })();
 </script>
+		<script>
+(function() {
+    window.addEventListener('load', function() {
+        var thanks = document.querySelector('.sm-thanks');
+        var modal = document.querySelector('.sm-modal');
+        if (thanks && modal && modal.contains(thanks)) {
+            document.body.appendChild(thanks);
+            console.log('✅ .sm-thanks перемещён обратно в body');
+        }
+    });
+})();
+</script>
         <link rel="stylesheet" href="../../css/style_intro.min.css">
         <div class="sm-opener" data-intro="3">
             <img data-sm-src="COVER_PHOTO" class="sm-opener_background">
