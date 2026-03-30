@@ -910,12 +910,12 @@
             return false;
         }
 		
-		if (data.quest_1 == 0) {
+		if (data.quest_alco === null) {
             alert('Пожалуйста, ответьте на вопрос о ваших предпочтениях в алкоголе');
             return false;
 		}
 
-		if (data.quest_ == 0) {
+		if (data.quest_food === null) {
             alert('Пожалуйста, ответьте на вопрос о ваших предпочтениях в еде');
             return false;
 		}
@@ -972,12 +972,12 @@
             answerRadios[i].checked = false;
         }
 
-		var q1Radios = form.querySelectorAll('[data-quest_1]');
+		var q1Radios = form.querySelectorAll('[quest_alco]');
         for (var i = 0; i < q1Radios.length; i++) {
             q1Radios[i].checked = false;
 		}
 		
-		var q2Radios = form.querySelectorAll('[data-quest_2]');
+		var q2Radios = form.querySelectorAll('[quest_food]');
         for (var i = 0; i < q2Radios.length; i++) {
             q2Radios[i].checked = false;
 		}
@@ -1014,8 +1014,8 @@
                 answer: data.answer,
                 //company: data.company,
                 //alco: JSON.stringify(data.alco),
-                quest_1: data.quest_1,
-				quest_2: data.quest_2,
+                quest_alco: data.quest_alco,
+				quest_food: data.quest_food,
                 source: isModal ? 'modal' : 'main'
             })
         })
