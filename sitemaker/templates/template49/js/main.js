@@ -139,9 +139,3 @@ function startAll() {
         setTimeout(function(){initWishSlider();},1000);
     }
 }
-
-function thankYou()
-{
-    $('.sm-thanks').toggleClass('active',true).toggleClass('sm-open',true);
-    setTimeout(function(){window.location.reload();},3000)
-}
