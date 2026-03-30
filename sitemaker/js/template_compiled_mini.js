@@ -36,7 +36,7 @@ function initWishSlider() {
     var tagNameSlide = $(wishSlide).prop("tagName")
 
 
-    for (var w = 0; w < 3; w++) {
+    for (var w = 0; w < 5; w++) {
         $('[data-sm-text="WISH_TEXT_ITEMS_' + w + '"]').parents(wishItem).remove();
 
         var alignClass='';
