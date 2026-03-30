@@ -6,30 +6,37 @@
         "answers": [
             {
                 "id": "alco11",
+                "value": "1",
                 "answer": "Шампанское"
             },
             {
                 "id": "alco21",
+                "value": "2",
                 "answer": "Белое вино"
             },
             {
                 "id": "alco31",
+                "value": "3",
                 "answer": "Красное вино"
             },
             {
                 "id": "alco41",
+                "value": "4",
                 "answer": "Самогон"
             },
             {
                 "id": "alco51",
+                "value": "5",
                 "answer": "Ром"
             },
             {
                 "id": "alco61",
+                "value": "6",
                 "answer": "Виски"
             },
             {
                 "id": "alco71",
+                "value": "7",
                 "answer": "Не пью алкоголь"
             }
         ]
@@ -41,10 +48,12 @@
         "answers": [
             {
                 "id": "meat",
+                "value": "1",
                 "answer": "Мясо"
             },
             {
                 "id": "fish",
+                "value": "2",
                 "answer": "Рыба"
             }
         ]
