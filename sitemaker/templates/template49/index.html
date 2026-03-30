@@ -914,19 +914,64 @@
     }
     
     // Функция показа сообщения "Спасибо"
-    function showThankYou() {
-        var thanksDiv = document.querySelector('.sm-thanks');
-        if (thanksDiv) {
-            thanksDiv.style.display = 'flex';
-            thanksDiv.style.visibility = 'visible';
-            thanksDiv.style.opacity = '1';
-            setTimeout(function() {
-                thanksDiv.style.display = 'none';
-            }, 3000);
-        } else {
-            alert('Спасибо! Ваш ответ сохранен');
-        }
+    function thankYou() {
+    console.log('thankYou called');
+    
+    // 1. Пытаемся найти элемент .sm-thanks на всей странице
+    var thanksDiv = document.querySelector('.sm-thanks');
+    
+    // 2. Если не нашли, возможно, он внутри модального окна (которое ещё открыто)
+    if (!thanksDiv) {
+        thanksDiv = document.querySelector('.sm-modal .sm-thanks');
     }
+    
+    // 3. Если элемент найден, показываем его
+    if (thanksDiv) {
+        // Принудительно показываем элемент (убираем возможные скрытия)
+        thanksDiv.style.display = 'flex';
+        thanksDiv.style.visibility = 'visible';
+        thanksDiv.style.opacity = '1';
+        thanksDiv.style.position = 'fixed';
+        thanksDiv.style.top = '50%';
+        thanksDiv.style.left = '50%';
+        thanksDiv.style.transform = 'translate(-50%, -50%)';
+        thanksDiv.style.zIndex = '100000';
+        
+        // Скрываем через 3 секунды
+        setTimeout(function() {
+            thanksDiv.style.display = 'none';
+        }, 3000);
+    } else {
+        // 4. Если элемента нет, создаём временное всплывающее окно
+        var popup = document.createElement('div');
+        popup.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #4CAF50;
+                color: white;
+                padding: 20px 40px;
+                border-radius: 10px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 1000000;
+                text-align: center;
+                box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+                font-family: Arial, sans-serif;
+            ">
+                ✅ Спасибо!<br>
+                <span style="font-size: 14px;">Ваш ответ сохранен</span>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        
+        setTimeout(function() {
+            popup.remove();
+        }, 3000);
+    }
+}
     
     // Функция закрытия модального окна
     function closeModal() {
