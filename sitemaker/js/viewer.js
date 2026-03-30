@@ -49,7 +49,21 @@ var temlatesOwnResize = [110]
 var ownBlockTemplateResize = '<section class="sm-own sm-edit" data-type="166" data-jsscroll="" data-jsscroll-slide-top=""><div class="sm-container"><div class="sm-own_wrapper"><div class="sm-own_wrapper-img"></div><div class="sm-title-resize-helper"><h2 class="sm-needtoresize" data-sm-text="OWN_TITLE" title=""></h2></div><div data-sm-text="OWN_TEXT" title="">{%OWN_TEXT%}</div><a data-sm-href="OWN_BUTTON_LINK" title="" class="sm-own_button" target="_blank"></a></div></div></section>';
 var ownBlockTemplate2Resize = '<section class="sm-own sm-edit" data-type="211" data-jsscroll="" data-jsscroll-slide-top=""><div class="sm-container"><div class="sm-own_wrapper"><div class="sm-own_wrapper-img"></div><div class="sm-title-resize-helper"><h2 class="sm-needtoresize" data-sm-text="NEW_OWN_TITLE" title=""></h2></div><div data-sm-text="NEW_OWN_TEXT" title="">{%NEW_OWN_TEXT%}</div><a data-sm-href="NEW_OWN_BUTTON_LINK" title="" class="sm-own_button" target="_blank"></a></div></div></section>';
 
-
+if (jQuery && jQuery._evalUrl) {
+    var originalEvalUrl = jQuery._evalUrl;
+    jQuery._evalUrl = function(url, options, doc) {
+        // Временно отключаем вывод предупреждений
+        var originalWarn = console.warn;
+        console.warn = function() {};
+        
+        var result = originalEvalUrl.call(this, url, options, doc);
+        
+        // Восстанавливаем console.warn
+        console.warn = originalWarn;
+        
+        return result;
+    };
+}
 
 $(window).on('resize', function () {
     ifresize()
