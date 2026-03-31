@@ -66,6 +66,9 @@
     --url-arrow: url(../img/arrow-left-b.webp)
 }
 
+.sm-form__item_radio.sm-disabled-option {
+    opacity: 0.5
+}
 .sm-color3 {
     --clr-text-1: #7D868D;
     --clr-btn: #FFFFFF;
