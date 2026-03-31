@@ -1482,12 +1482,6 @@ function fillQuests() {
                         input.attr('name', sorname);
                         input.val(va.id);
                         input.attr('id', sornamek);
-
-                         if (va.disabled === true) {
-                            input.attr('disabled', 'disabled');
-                             // Добавляем класс для стилизации
-                            input.parent().addClass('sm-disabled');
-                            }
                         
                         // Добавляем стили для radio
                         input.css({
