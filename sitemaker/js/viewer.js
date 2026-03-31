@@ -974,40 +974,46 @@ function loadTemplate(){
                                     var sornamek = sorname + '_' + va.id;
                                     var sornamev = va.answer;
     
+                                    // КЛОН: создаём копию шаблонного элемента
                                     var smbd = smbb.clone();
                                     drinks.append(smbd);
-                                    var chb = $(drinks.find('.ct-alcotpl')[ka]);
-                                    var input = chb.find('input');
     
-                                    // Настройка input
-                                    if (isRadio) {
-                                        input.attr('type', 'radio');
-                                        input.attr('name', sorname);
-                                    } else {
-                                        input.attr('type', 'checkbox');
-                                        input.attr('name', sorname + '[]');
-                                    }
-                                    input.val(va.id);
-                                    input.attr('id', sornamek);
+                // Находим последний добавленный элемент
+    var chb = $(drinks.find('.ct-alcotpl').last());
+    var input = chb.find('input');
     
-                                    // ===== СОЗДАЁМ SPAN ДЛЯ ТЕКСТА =====
-                                    var answerSpan = $('<span>', {
-                                        'class': 'sm-form__item-radio',
-                                        'for': sornamek
-                                    });
-                                    answerSpan.html(sornamev);
+    // Настройка input
+    if (isRadio) {
+        input.attr('type', 'radio');
+        input.attr('name', sorname);
+    } else {
+        input.attr('type', 'checkbox');
+        input.attr('name', sorname + '[]');
+    }
+    input.val(va.id);
+    input.attr('id', sornamek);
     
-                                    // Удаляем старый [data-sm-alcoitem] и добавляем новый span
-                                    chb.find('[data-sm-alcoitem]').remove();
-                                    chb.append(answerSpan);
-                                    // ===================================
+    // НЕ УДАЛЯЕМ старый [data-sm-alcoitem], а просто меняем его содержимое
+    var label = chb.find('[data-sm-alcoitem]');
+    if (label.length) {
+        label.attr('for', sornamek);
+        label.html(sornamev);
+    } else {
+        // Если нет, создаём новый
+        var answerSpan = $('<span>', {
+            'class': 'sm-form__item-radio',
+            'for': sornamek
+        });
+        answerSpan.html(sornamev);
+        chb.append(answerSpan);
+    }
     
-                                    // Добавляем disabled
-                                    if (va.disabled === true || va.disabled === "true") {
-                                        input.prop('disabled', true);
-                                        chb.addClass('sm-disabled-option');
-                                    }
-                                });
+    // Добавляем disabled
+    if (va.disabled === true || va.disabled === "true") {
+        input.prop('disabled', true);
+        chb.addClass('sm-disabled-option');
+    }
+});
     
      /*if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
         chb.find('[data-sm-alcoitem]').attr('for', forqu + '-' + ko + '_' + va.id).html(va.answer);
