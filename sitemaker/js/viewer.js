@@ -971,17 +971,27 @@ function loadTemplate(){
                                 drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
                                 $.each(v.answers, function (ka, va) {
-                                    var smbd = smbb.clone();
-                                    drinks.append(smbd)
-                                    var chb = $(drinks.find('.ct-alcotpl')[ka]);
-                                    chb.find('input').val(va.id).attr('name', forqu + '[]').attr('id', forqu + '-' + ko + '_' + va.id);
-                                    if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
-                                        chb.find('[data-sm-alcoitem]').attr('for', forqu + '-' + ko + '_' + va.id).html(va.answer);
-                                    } else {
-                                        chb.find('[data-sm-alcoitem]').parents('label').attr('for', forqu + '-' + ko + '_' + va.id)
-                                        chb.find('[data-sm-alcoitem]').html(va.answer);
-                                    }
-                                })
+    var smbd = smbb.clone();
+    drinks.append(smbd)
+    var chb = $(drinks.find('.ct-alcotpl')[ka]);
+    var input = chb.find('input');
+    
+    input.val(va.id).attr('name', forqu + '[]').attr('id', forqu + '-' + ko + '_' + va.id);
+    
+    // Добавляем disabled, если указано в JSON
+    if (va.disabled === true || va.disabled === "true") {
+        input.attr('disabled', 'disabled');
+        input.prop('disabled', true);
+        chb.addClass('sm-disabled-option');
+    }
+    
+    if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
+        chb.find('[data-sm-alcoitem]').attr('for', forqu + '-' + ko + '_' + va.id).html(va.answer);
+    } else {
+        chb.find('[data-sm-alcoitem]').parents('label').attr('for', forqu + '-' + ko + '_' + va.id)
+        chb.find('[data-sm-alcoitem]').html(va.answer);
+    }
+})
 
                                /* if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
