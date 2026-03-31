@@ -971,21 +971,45 @@ function loadTemplate(){
                                 drinks.find(tn + ':not(.ct-alcotpl)').remove();
 
                                 $.each(v.answers, function (ka, va) {
-    var smbd = smbb.clone();
-    drinks.append(smbd)
-    var chb = $(drinks.find('.ct-alcotpl')[ka]);
-    var input = chb.find('input');
+                                    var sornamek = sorname + '_' + va.id;
+                                    var sornamev = va.answer;
     
-    input.val(va.id).attr('name', forqu + '[]').attr('id', forqu + '-' + ko + '_' + va.id);
+                                    var smbd = smbb.clone();
+                                    drinks.append(smbd);
+                                    var chb = $(drinks.find('.ct-alcotpl')[ka]);
+                                    var input = chb.find('input');
     
-    // Добавляем disabled, если указано в JSON
-    if (va.disabled === true || va.disabled === "true") {
-        input.attr('disabled', 'disabled');
-        input.prop('disabled', true);
-        chb.addClass('sm-disabled-option');
-    }
+                                    // Настройка input
+                                    if (isRadio) {
+                                        input.attr('type', 'radio');
+                                        input.attr('name', sorname);
+                                    } else {
+                                        input.attr('type', 'checkbox');
+                                        input.attr('name', sorname + '[]');
+                                    }
+                                    input.val(va.id);
+                                    input.attr('id', sornamek);
     
-    if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
+                                    // ===== СОЗДАЁМ SPAN ДЛЯ ТЕКСТА =====
+                                    var answerSpan = $('<span>', {
+                                        'class': 'sm-form__item-radio',
+                                        'for': sornamek
+                                    });
+                                    answerSpan.html(sornamev);
+    
+                                    // Удаляем старый [data-sm-alcoitem] и добавляем новый span
+                                    chb.find('[data-sm-alcoitem]').remove();
+                                    chb.append(answerSpan);
+                                    // ===================================
+    
+                                    // Добавляем disabled
+                                    if (va.disabled === true || va.disabled === "true") {
+                                        input.prop('disabled', true);
+                                        chb.addClass('sm-disabled-option');
+                                    }
+                                });
+    
+     /*if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
         chb.find('[data-sm-alcoitem]').attr('for', forqu + '-' + ko + '_' + va.id).html(va.answer);
     } else {
         chb.find('[data-sm-alcoitem]').parents('label').attr('for', forqu + '-' + ko + '_' + va.id)
@@ -993,7 +1017,7 @@ function loadTemplate(){
     }
 })
 
-                               /* if (typeof v.type != 'undefined' && v.type == '1') {
+                               if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
                                     var smbd = $(smbi).clone();
                                     drinks.append(smbd)
