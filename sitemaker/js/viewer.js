@@ -1482,7 +1482,10 @@ function fillQuests() {
                         input.attr('name', sorname);
                         input.val(va.id);
                         input.attr('id', sornamek);
-                        
+
+                         if (va.disabled === true) {
+                            input.attr('disabled', 'disabled');
+                        }
                         // Добавляем стили для radio
                         input.css({
                             'width': '18px',
