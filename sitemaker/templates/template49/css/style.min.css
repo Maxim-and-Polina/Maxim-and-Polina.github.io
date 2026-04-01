@@ -2363,7 +2363,8 @@ a {
 
     .sm-btn {
         width: 100%;
-        max-width: initial
+        max-width: initial;
+        padding: 20px
     }
 
     .sm-contact a.sm-manropeLight-20-18,.sm-footer__shell__title {
