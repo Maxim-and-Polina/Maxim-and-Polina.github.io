@@ -966,7 +966,7 @@ function loadTemplate(){
                                     
                                     // Добавляем span в контейнер
                                     chb.append(answerSpan);
-                                });
+
                                 // ===== КОНЕЦ СОЗДАНИЯ ОТВЕТОВ =====
 
                                if (typeof v.type != 'undefined' && v.type == '1') {
