@@ -983,9 +983,7 @@ function loadTemplate(){
                                 iframe.contents().find('[data-sm-anketa-toggle]').removeClass('sm-hidden');
                                 iframe.contents().find('[data-forq]').removeClass('sm-hidden');
                           }) // закрытие $.each(smb, ...)
-                        } // закрытие if (smb.length > 0)
-                    }) // закрытие $.each(template_val.questions, ...)
-                } // закрытие if (template_val.questions && ...)
+                    } // закрытие $.each(template_val.questions, ...)
                 questfilled = true;
             } // закрытие if (data && data.length > 0)
         }) // закрытие .then(data => { ... })
