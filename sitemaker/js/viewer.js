@@ -970,7 +970,7 @@ function loadTemplate(){
                                     
                                     // Создаём новый span для текста ответа
                                     var answerSpan = $('<span>', {
-                                        'class': 'sm-form__item-radio',
+                                        'class': 'sm-manropeLigth-20-18',
                                         'for': forqu + '-' + ko + '_' + va.id
                                     });
                                     answerSpan.html(va.answer);
@@ -980,7 +980,7 @@ function loadTemplate(){
                                 });
                                 // ===== КОНЕЦ СОЗДАНИЯ ОТВЕТОВ =====
 
-                                // Для текстовых вопросов (type == 2)
+                                /*/ Для текстовых вопросов (type == 2)
                                 if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
                                     if (smbi) {
@@ -992,7 +992,7 @@ function loadTemplate(){
                                            .attr('placeholder', 'Ваш ответ')
                                            .removeAttr('data-sm-anketa-name');
                                     }
-                                }
+                                }*/
 
                                 // Очистка временных элементов
                                 smbb.remove();
