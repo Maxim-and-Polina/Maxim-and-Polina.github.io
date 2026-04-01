@@ -980,8 +980,8 @@ function loadTemplate(){
                                 });
                                 // ===== КОНЕЦ СОЗДАНИЯ ОТВЕТОВ =====
 
-                                /*/ Для текстовых вопросов (type == 2)
-                                if (typeof v.type != 'undefined' && v.type == '1') {
+                                // Для текстовых вопросов (type == 2)
+                                if (typeof v.type != 'undefined' && v.type == '2') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
                                     if (smbi) {
                                         var smbd = $(smbi).clone();
@@ -992,7 +992,7 @@ function loadTemplate(){
                                            .attr('placeholder', 'Ваш ответ')
                                            .removeAttr('data-sm-anketa-name');
                                     }
-                                }*/
+                                }
 
                                 // Очистка временных элементов
                                 smbb.remove();
