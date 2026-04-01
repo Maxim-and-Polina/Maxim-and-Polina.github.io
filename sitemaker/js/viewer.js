@@ -893,31 +893,6 @@ function loadTemplate(){
         })
     }
 
-    doGrayscales();
-
-    setTimeout(function () {
-        initTimingIcons();
-        setFontSize();
-        autoResizeText();
-    }, 500)
-
-
-    initVideo();
-
-    if (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS']) {
-        if (iframe.contents().find('[data-sm-src="DRESSCODE_GIRLS_GALLERY_ITEMS_0"]').parents('.slick-slider').length > 0) {
-            iframe.contents().find('[data-sm-text="DRESSCODE_GIRLS_TITLE"]').toggleClass('sm-hidden', (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS'].length === 0));
-            iframe.contents().find('[data-sm-src="DRESSCODE_GIRLS_GALLERY_ITEMS_0"]').parents('.slick-slider').toggleClass('sm-hidden', (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS'].length === 0));
-        }
-    }
-
-    if (data_value['DRESSCODE_GUYS_GALLERY_ITEMS']) {
-        if (iframe.contents().find('[data-sm-src="DRESSCODE_GUYS_GALLERY_ITEMS_0"]').parents('.slick-slider').length > 0) {
-            iframe.contents().find('[data-sm-text="DRESSCODE_GUYS_TITLE"]').toggleClass('sm-hidden', (data_value['DRESSCODE_GUYS_GALLERY_ITEMS'].length === 0));
-            iframe.contents().find('[data-sm-src="DRESSCODE_GUYS_GALLERY_ITEMS_0"]').parents('.slick-slider').toggleClass('sm-hidden', (data_value['DRESSCODE_GUYS_GALLERY_ITEMS'].length === 0));
-        }
-    }
-
     if (typeof fillQuests !== "undefined" && iframe.contents().find('.ct-addquests_wrapper').length === 0) {
     // Загрузка вопросов из статического JSON файла
     fetch(`sitemaker/data/questions_${project}.json`)
@@ -936,7 +911,43 @@ function loadTemplate(){
                     if (smb.find('.sm-form_preferences').length > 0) {
                         ins = ' > .sm-form_preferences';
                     }
-                     $.each(v.answers, function (ka, va) {
+                    
+                    $.each(template_val.questions, function (k, v) {
+                        var forqu = 'quest_' + v.id;
+                        if (smb.length > 0) {
+                            $.each(smb, function (ko, vo) {
+                                var smbt = $(smb.find('div')[0]).clone();
+
+                                if (smb.parent().find('[data-sm-anketa-toggle]' + ins + ' > label').length > 0) {
+                                    smbt = $(smb.find('label')[0]).clone();
+                                } else if (smb.parent().find('[data-sm-anketa-toggle]' + ins + ' > p').length > 0) {
+                                    smbt = $(smb.find('p')[0]).clone();
+                                }
+
+                                var smbc = $(smb.find('[data-sm-anketa]')[0]).clone();
+                                var smbb = $(smb.find('.ct-alcotpl')[0]).clone();
+
+                                smbt.removeAttr('data-sm-text');
+                                smbt.attr('data-forq', forqu);
+                                smbc.attr('data-forq', forqu);
+
+                                $(this).append(smbt);
+                                $(this).append(smbc);
+
+                                var titl = $(this).find('[data-forq="' + forqu + '"]:not([data-sm-anketa])');
+
+                                while (titl.children().length) {
+                                    titl = titl.children();
+                                }
+
+                                $(titl[0]).html(v.question);
+
+                                var drinks = $(this).find('[data-sm-anketa][data-forq="' + forqu + '"]');
+                                var tn = drinks.find('.ct-alcotpl').prop("tagName");
+                                drinks.find(tn + ':not(.ct-alcotpl)').remove();
+
+                                // ===== СОЗДАНИЕ ОТВЕТОВ =====
+                                $.each(v.answers, function (ka, va) {
                                     var smbd = smbb.clone();
                                     drinks.append(smbd);
                                     var chb = $(drinks.find('.ct-alcotpl')[ka]);
@@ -966,31 +977,66 @@ function loadTemplate(){
                                     
                                     // Добавляем span в контейнер
                                     chb.append(answerSpan);
-
+                                });
                                 // ===== КОНЕЦ СОЗДАНИЯ ОТВЕТОВ =====
 
-                               if (typeof v.type != 'undefined' && v.type == '1') {
+                                // Для текстовых вопросов (type == 2)
+                                if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
-                                    var smbd = $(smbi).clone();
-                                    drinks.append(smbd)
-                                    var inp = drinks.find('[data-sm-anketa-name]');
-                                    inp.attr('name', forqu).attr('id', forqu + '_' + ko).attr('placeholder', 'Ваш ответ').removeAttr('data-sm-anketa-name');
+                                    if (smbi) {
+                                        var smbd = $(smbi).clone();
+                                        drinks.append(smbd);
+                                        var inp = drinks.find('[data-sm-anketa-name]');
+                                        inp.attr('name', forqu)
+                                           .attr('id', forqu + '_' + ko)
+                                           .attr('placeholder', 'Ваш ответ')
+                                           .removeAttr('data-sm-anketa-name');
+                                    }
                                 }
 
+                                // Очистка временных элементов
                                 smbb.remove();
                                 drinks.find('.ct-alcotpl [name="alco[]"]').parents('.ct-alcotpl').remove();
                                 drinks.find('.ct-alcotpl').removeClass('ct-alcotpl');
                                 iframe.contents().find('[data-sm-anketa-toggle]').removeClass('sm-hidden');
                                 iframe.contents().find('[data-forq]').removeClass('sm-hidden');
-                          }) // закрытие $.each(smb, ...)
-                    } // закрытие $.each(template_val.questions, ...)
+                            });
+                        }
+                    });
+                }
                 questfilled = true;
-            } // закрытие if (data && data.length > 0)
-        }) // закрытие .then(data => { ... })
+            }
+        })
         .catch(error => {
-            console.log('Нет дополнительных вопросов');
+            console.log('Нет дополнительных вопросов:', error);
         });
     }
+    doGrayscales();
+
+    setTimeout(function () {
+        initTimingIcons();
+        setFontSize();
+        autoResizeText();
+    }, 500)
+
+
+    initVideo();
+
+    if (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS']) {
+        if (iframe.contents().find('[data-sm-src="DRESSCODE_GIRLS_GALLERY_ITEMS_0"]').parents('.slick-slider').length > 0) {
+            iframe.contents().find('[data-sm-text="DRESSCODE_GIRLS_TITLE"]').toggleClass('sm-hidden', (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS'].length === 0));
+            iframe.contents().find('[data-sm-src="DRESSCODE_GIRLS_GALLERY_ITEMS_0"]').parents('.slick-slider').toggleClass('sm-hidden', (data_value['DRESSCODE_GIRLS_GALLERY_ITEMS'].length === 0));
+        }
+    }
+
+    if (data_value['DRESSCODE_GUYS_GALLERY_ITEMS']) {
+        if (iframe.contents().find('[data-sm-src="DRESSCODE_GUYS_GALLERY_ITEMS_0"]').parents('.slick-slider').length > 0) {
+            iframe.contents().find('[data-sm-text="DRESSCODE_GUYS_TITLE"]').toggleClass('sm-hidden', (data_value['DRESSCODE_GUYS_GALLERY_ITEMS'].length === 0));
+            iframe.contents().find('[data-sm-src="DRESSCODE_GUYS_GALLERY_ITEMS_0"]').parents('.slick-slider').toggleClass('sm-hidden', (data_value['DRESSCODE_GUYS_GALLERY_ITEMS'].length === 0));
+        }
+    }
+
+    
     if(typeof data_value['OWN_IMAGES'] == 'undefined')
     {
         data_value['OWN_IMAGES'] = [];
