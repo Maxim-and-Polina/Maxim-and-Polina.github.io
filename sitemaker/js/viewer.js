@@ -2,7 +2,7 @@ var inp;
 var cursect = 0;
 var sections = [];
 var offsections = [];
-let template_val = {};1
+let template_val = {};
 let template_data = {};
 var data_value = {};
 var iframe = $('iframe');
