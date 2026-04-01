@@ -418,7 +418,7 @@ i[data-sm-alcoitem],i[data-sm-text] {
     pointer-events: none
 }
 
-[data-sm-text=BRIDE_TEL],[data-sm-text=GROOM_TEL] {
+[data-sm-text=COORD_TEL],[data-sm-text=GROOM_TEL] {
     white-space: nowrap
 }
 
