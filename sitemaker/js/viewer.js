@@ -936,62 +936,38 @@ function loadTemplate(){
                     if (smb.find('.sm-form_preferences').length > 0) {
                         ins = ' > .sm-form_preferences';
                     }
-                    $.each(template_val.questions, function (k, v) {
-                        var forqu = 'quest_' + v.id;
-                        if (smb.length > 0) {
-                            $.each(smb, function (ko, vo) {
-                                var smbt = $(smb.find('div')[0]).clone();
-
-                                if (smb.parent().find('[data-sm-anketa-toggle]' + ins + ' > label').length > 0) {
-                                    smbt = $(smb.find('label')[0]).clone();
-                                } else if (smb.parent().find('[data-sm-anketa-toggle]' + ins + ' > p').length > 0) {
-                                    smbt = $(smb.find('p')[0]).clone();
-                                }
-
-                                var smbc = $(smb.find('[data-sm-anketa]')[0]).clone();
-                                var smbb = $(smb.find('.ct-alcotpl')[0]).clone();
-
-                                smbt.removeAttr('data-sm-text');
-                                smbt.attr('data-forq', forqu)
-                                smbc.attr('data-forq', forqu);
-
-                                $(this).append(smbt);
-                                $(this).append(smbc);
-
-                                var titl = $(this).find('[data-forq="' + forqu + '"]:not([data-sm-anketa])');
-
-                                while (titl.children().length) {
-                                    titl = titl.children();
-                                }
-
-                                $(titl[0]).html(v.question);
-
-                                var drinks = $(this).find('[data-sm-anketa][data-forq="' + forqu + '"]');
-                                var tn = drinks.find('.ct-alcotpl').prop("tagName");
-                                drinks.find(tn + ':not(.ct-alcotpl)').remove();
-
-                                $.each(v.answers, function (ka, va) {
-                                   var smbd = smbb.clone();
-    drinks.append(smbd)
-    var chb = $(drinks.find('.ct-alcotpl')[ka]);
-    var input = chb.find('input');
-    
-    input.val(va.id).attr('name', forqu + '[]').attr('id', forqu + '-' + ko + '_' + va.id);
-    
-    // Добавляем disabled, если указано в JSON
-    if (va.disabled === true || va.disabled === "true") {
-        input.attr('disabled', 'disabled');
-        input.prop('disabled', true);
-        chb.addClass('sm-disabled-option');
-    }
-    
-    if (chb.find('[data-sm-alcoitem]').parents('label').length == 0) {
-        chb.find('[data-sm-alcoitem]').attr('for', forqu + '-' + ko + '_' + va.id).html(va.answer);
-    } else {
-        chb.find('[data-sm-alcoitem]').parents('label').attr('for', forqu + '-' + ko + '_' + va.id)
-        chb.find('[data-sm-alcoitem]').html(va.answer);
-    }
-})
+                     $.each(v.answers, function (ka, va) {
+                                    var smbd = smbb.clone();
+                                    drinks.append(smbd);
+                                    var chb = $(drinks.find('.ct-alcotpl')[ka]);
+                                    var input = chb.find('input');
+                                    
+                                    // Настройка input
+                                    input.val(va.id);
+                                    input.attr('name', forqu + '[]');
+                                    input.attr('id', forqu + '-' + ko + '_' + va.id);
+                                    
+                                    // Добавляем disabled, если указано в JSON
+                                    if (va.disabled === true || va.disabled === "true") {
+                                        input.attr('disabled', 'disabled');
+                                        input.prop('disabled', true);
+                                        chb.addClass('sm-disabled-option');
+                                    }
+                                    
+                                    // Удаляем старый элемент текста
+                                    chb.find('[data-sm-alcoitem]').remove();
+                                    
+                                    // Создаём новый span для текста ответа
+                                    var answerSpan = $('<span>', {
+                                        'class': 'sm-form__item-radio',
+                                        'for': forqu + '-' + ko + '_' + va.id
+                                    });
+                                    answerSpan.html(va.answer);
+                                    
+                                    // Добавляем span в контейнер
+                                    chb.append(answerSpan);
+                                });
+                                // ===== КОНЕЦ СОЗДАНИЯ ОТВЕТОВ =====
 
                                if (typeof v.type != 'undefined' && v.type == '1') {
                                     var smbi = iframe.contents().find('[data-sm-anketa-name]')[0];
