@@ -7,9 +7,8 @@
 }
 
 [data-temp-disabled="true"] {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
 }
 
 :root {
