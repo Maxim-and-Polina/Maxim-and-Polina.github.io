@@ -1146,21 +1146,30 @@
     });
 })();
 function toggleAdditionalQuestions() {
-    var answerNo = document.querySelector('[data-answer][value="2"]');
-    var answerYes = document.querySelector('[data-answer][value="1"]');
+// ============================================
+// УПРАВЛЕНИЕ ДОПОЛНИТЕЛЬНЫМИ ВОПРОСАМИ (ОСНОВНАЯ ФОРМА + МОДАЛЬНОЕ ОКНО)
+// ============================================
+
+function toggleAdditionalQuestions(container) {
+    // Если container не указан, ищем в основном документе
+    if (!container) {
+        container = document;
+    }
     
+    var answerNo = container.querySelector('[data-answer][value="2"]');
     if (!answerNo) return;
     
     var isNoSelected = answerNo.checked;
-    var additionalSection = document.querySelector('[data-sm-anketa-toggle]');
     
+    // Находим секцию с дополнительными вопросами внутри указанного контейнера
+    var additionalSection = container.querySelector('[data-sm-anketa-toggle]');
     if (!additionalSection) return;
     
     var allInputs = additionalSection.querySelectorAll('input, select, textarea');
-    var allContainers = additionalSection.querySelectorAll('.sm-form__block');
+    var allContainers = additionalSection.querySelectorAll('.sm-form__block, .ct-alcotpl');
     
     if (isNoSelected) {
-        // Отключаем всё с анимацией
+        // Отключаем всё
         allContainers.forEach(function(container) {
             container.style.opacity = '0.5';
             container.style.transition = 'opacity 0.3s';
@@ -1171,14 +1180,13 @@ function toggleAdditionalQuestions() {
             input.setAttribute('disabled', 'disabled');
         });
         
-        // Дополнительно скрываем кнопку отправки?
-        var sendBtn = document.querySelector('[data-sm-anketa-send]');
+        /*/ Отключаем кнопку отправки в этом контейнере
+        var sendBtn = container.querySelector('[data-sm-anketa-send]');
         if (sendBtn) {
             sendBtn.style.opacity = '0.5';
             sendBtn.disabled = true;
-        }
-        
-    } else if (answerYes && answerYes.checked) {
+        }*/
+    } else {
         // Включаем обратно
         allContainers.forEach(function(container) {
             container.style.opacity = '1';
@@ -1191,23 +1199,58 @@ function toggleAdditionalQuestions() {
                 input.removeAttribute('disabled');
             }
         });
-        
-        var sendBtn = document.querySelector('[data-sm-anketa-send]');
+       /* 
+        var sendBtn = container.querySelector('[data-sm-anketa-send]');
         if (sendBtn) {
             sendBtn.style.opacity = '1';
             sendBtn.disabled = false;
-        }
+        }*/
     }
 }
 
-// Обработчик изменения
+// Инициализация для основной формы
+function initMainFormDependency() {
+    toggleAdditionalQuestions(document);
+}
+
+// Инициализация для модального окна
+function initModalDependency() {
+    var modal = document.querySelector('#modal, .sm-modal');
+    if (modal) {
+        toggleAdditionalQuestions(modal);
+    }
+}
+
+// Следим за изменениями в основной форме
 $(document).on('change', '[data-answer]', function() {
-    toggleAdditionalQuestions();
+    // Определяем, в каком контейнере находится изменённый элемент
+    var container = $(this).closest('#modal, .sm-modal').length ? 
+                    $(this).closest('#modal, .sm-modal')[0] : 
+                    document;
+    toggleAdditionalQuestions(container);
 });
 
-// При загрузке страницы
+// Следим за открытием модального окна (если используется fancybox или другой плагин)
+$(document).on('click', '.open-modal', function() {
+    // Небольшая задержка, чтобы модальное окно успело открыться
+    setTimeout(function() {
+        initModalDependency();
+    }, 100);
+});
+
+// MutationObserver для отслеживания появления модального окна
+var observer = new MutationObserver(function(mutations) {
+    var modal = document.querySelector('#modal, .sm-modal');
+    if (modal && modal.style.display !== 'none') {
+        initModalDependency();
+        observer.disconnect(); // Отключаем после первого обнаружения
+    }
+});
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Запускаем при загрузке страницы
 $(document).ready(function() {
-    toggleAdditionalQuestions();
+    initMainFormDependency();
 });
 </script>
         <link rel="stylesheet" href="../../css/style_intro.min.css">
