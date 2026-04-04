@@ -871,33 +871,6 @@
         var answerRadio = form.querySelector('[data-answer]:checked');
         data.answer = answerRadio ? answerRadio.value : 0;
         
-        /*/ Спутник/спутница
-        var companyInput = form.querySelector('[data-sm-anketa-company]');
-        data.company = companyInput ? companyInput.value : '';
-        
-        // Напитки (checkbox)
-        var alcoBoxes = form.querySelectorAll('input[name="alco[]"]:checked');
-        data.alco = [];
-        for (var i = 0; i < alcoBoxes.length; i++) {
-            if (alcoBoxes[i] && alcoBoxes[i].value) {
-                data.alco.push(alcoBoxes[i].value);
-            }
-        }
-        
-        // Дополнительные вопросы
-        data.quest = {};
-        var questContainers = form.querySelectorAll('[data-sm-anketa][data-forq]');
-        for (var i = 0; i < questContainers.length; i++) {
-            var container = questContainers[i];
-            var qid = container.getAttribute('data-forq');
-            if (qid) {
-                data.quest[qid] = [];
-                var checkedInputs = container.querySelectorAll('input:checked');
-                for (var j = 0; j < checkedInputs.length; j++) {
-                    data.quest[qid].push(checkedInputs[j].value);
-                }
-            }
-        }*/
         var questContainers = document.querySelectorAll('[data-sm-anketa][data-forq]');
         for (var i = 0; i < questContainers.length; i++) {
             var qid = questContainers[i].getAttribute('data-forq');
@@ -992,18 +965,6 @@
         for (var i = 0; i < q2Radios.length; i++) {
             q2Radios[i].checked = false;
 		}
-        /*/ Снимаем все checkbox
-        var checkboxes = form.querySelectorAll('input[type="checkbox"]');
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = false;
-        }
-        
-        // Очищаем поле спутника
-        var companyInput = form.querySelector('[data-sm-anketa-company]');
-        if (companyInput) companyInput.value = '';*/
-    
-	
-	}
     
     // Функция отправки данных
     function sendFormData(data, button, form, isModal) {
@@ -1031,18 +992,32 @@
             })
         })
         .then(function(response) {
+              if (!response.ok) {
+                throw new Error('Сервер ответил с ошибкой: ' + response.status);
+            }
             return response.json();
         })
         .then(function(result) {
-            console.log('✅ Отправка успешна:', result);
-            
+             // ** НОВОЕ: логирование ответа от сервера **
+            console.log('📨 Ответ от сервера:', result);
+              // ** НОВОЕ: обработка результата **
+            if (result.result === 'success') {
+                console.log('✅ Отправка успешна:', result.message);
             // Показываем "Спасибо"
             showThankYou(isModal);
-            
             // Очищаем форму
             clearForm(form);
             
             // Разблокируем кнопку
+            button.disabled = false;
+            button.textContent = originalText;
+			} else {
+            	// ** НОВОЕ: обработка ошибки от сервера **
+                console.error('❌ Ошибка от сервера:', result.message);
+                alert('Ошибка: ' + result.message);
+                // Форму НЕ очищаем при ошибке
+            }
+			 // Разблокируем кнопку
             button.disabled = false;
             button.textContent = originalText;
         })
