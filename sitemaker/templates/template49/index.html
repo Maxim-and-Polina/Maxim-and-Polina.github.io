@@ -1020,23 +1020,6 @@
             // Разблокируем кнопку
             button.disabled = false;
             button.textContent = originalText;
-			} else {
-            	// ** НОВОЕ: обработка ошибки от сервера **
-                console.error('❌ Ошибка от сервера:', result.message);
-                alert('Ошибка: ' + result.message);
-                // Форму НЕ очищаем при ошибке
-            }
-			 // Разблокируем кнопку
-            button.disabled = false;
-            button.textContent = originalText;
-        })
-        .catch(function(error) {
-            console.error('❌ Ошибка отправки:', error);
-            alert('Ошибка отправки. Пожалуйста, попробуйте позже.');
-            
-            // Разблокируем кнопку
-            button.disabled = false;
-            button.textContent = originalText;
         });
     }
     // ===== НОВАЯ ФУНКЦИЯ: ПОДСВЕТКА И ОЧИСТКА КОНКРЕТНОГО ПОЛЯ =====
