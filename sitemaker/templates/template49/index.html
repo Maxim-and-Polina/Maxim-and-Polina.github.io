@@ -890,7 +890,6 @@
             alert('Пожалуйста, введите ваше имя и фамилию');
             return false;
         }
-        
         if (data.answer == 0) {
             alert('Пожалуйста, ответьте на вопрос о вашем присутствии');
             return false;
@@ -899,8 +898,16 @@
             alert('Пожалуйста, ответьте на вопрос о ваших предпочтениях в алкоголе');
             return false;
 		}
-		if (typeof data.quest_food == 'undefined') {
-            alert('Пожалуйста, ответьте на вопрос о ваших предпочтениях в еде');
+		if (typeof data.quest_salad == 'undefined') {
+            alert('Пожалуйста, ответьте на вопрос о выборе салата');
+            return false;
+		}
+		if (typeof data.quest_main_dish == 'undefined') {
+            alert('Пожалуйста, ответьте на вопрос о выборе горячего');
+            return false;
+		}
+		if (typeof data.quest_main_dish == 'undefined') {
+            alert('Пожалуйста, ответьте на вопрос о выборе гарнира');
             return false;
 		}
 		}
