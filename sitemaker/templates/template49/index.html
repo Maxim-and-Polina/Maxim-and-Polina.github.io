@@ -1070,10 +1070,11 @@
     	if (!field) return;
     
     	// Подсвечиваем поле
-    	//var originalBorder = field.style.border;
+    	var originalBorder = field.style.border;
+		var originalBorderRadius = field.style.borderRadius = '5px';
     	var originalBackground = field.style.backgroundColor;
     
-    	//field.style.border = '2px solid #f44336';
+    	field.style.border = 'solid #ffebee';
     	field.style.backgroundColor = '#ffebee';
 		field.style.borderRadius = '5px';
     
@@ -1089,7 +1090,8 @@
     
     	// Убираем подсветку через 3 секунды
     	setTimeout(function() {
-        	//field.style.border = originalBorder;
+        	field.style.border = originalBorder;
+			field.style.borderRadius = originalBorderRadius;
         	field.style.backgroundColor = originalBackground;
     	}, 3000);
 	}
