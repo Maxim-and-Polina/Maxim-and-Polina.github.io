@@ -968,9 +968,17 @@
             q1Radios[i].checked = false;
 		}
 		
-		var q2Radios = form.querySelectorAll('[name="quest_food[]"]');
+		var q2Radios = form.querySelectorAll('[name="quest_salad[]"]');
         for (var i = 0; i < q2Radios.length; i++) {
             q2Radios[i].checked = false;
+		}
+		var q3Radios = form.querySelectorAll('[name="quest_main_dish[]"]');
+        for (var i = 0; i < q3Radios.length; i++) {
+            q3Radios[i].checked = false;
+		}
+		var q4Radios = form.querySelectorAll('[name="quest_side_dish[]"]');
+        for (var i = 0; i < q4Radios.length; i++) {
+            q4Radios[i].checked = false;
 		}
 	}
     // Функция отправки данных
