@@ -889,6 +889,10 @@
             	}
 			}
         }
+
+		var commentInput = form.querySelector('[data-sm-anketa-comment]');
+        data.commentInput = commentInput ? commentInput.value : '';
+		
         return data;
     }
     
@@ -964,6 +968,9 @@
         // Очищаем поле имени
         var nameInput = form.querySelector('[data-sm-anketa-name]');
         if (nameInput) nameInput.value = '';
+		
+		var commentInput = form.querySelector('[data-sm-anketa-comment]');
+        if (commentInput) commentInput.value = '';
         
         // Снимаем все radio
         var answerRadios = form.querySelectorAll('[data-answer]');
@@ -1014,6 +1021,7 @@
 				quest_salad: data.quest_salad,
 				quest_main_dish: data.quest_main_dish,
 				quest_side_dish: data.quest_side_dish,
+				commentInput: data.commentInput,
                 source: isModal ? 'modal' : 'main'
             })
         })
