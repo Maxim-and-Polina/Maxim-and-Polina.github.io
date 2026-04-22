@@ -1998,7 +1998,7 @@ a {
 }
 
 .sm-footer p.sm-cormorantRegular-100-30 {
-    font-size: 50px
+    font-size: 50px;
     color: #333333
 }
 
@@ -2006,7 +2006,7 @@ a {
     font-size: 80px;
     line-height: 88px;
     text-transform: uppercase;
-    text-align: center
+    text-align: center;
     color: #333333
 }
 
